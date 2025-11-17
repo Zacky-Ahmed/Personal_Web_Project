@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>Gem</groupId>
-    <artifactId>Gemora</artifactId>
+    <artifactId>GemBro</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>Gemora</name>
-    <description>Gemora</description>
+    <name>GemBro</name>
+    <description>GemBro</description>
     <url/>
     <licenses>
         <license/>
