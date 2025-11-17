@@ -1,13 +1,13 @@
-package gem.gemora;
+package gem.gembro;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class GemoraApplication {
+public class GemBroApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(GemoraApplication.class, args);
+        SpringApplication.run(GemBroApplication.class, args);
     }
 
 }
