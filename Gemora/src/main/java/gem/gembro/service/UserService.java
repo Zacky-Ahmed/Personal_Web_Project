@@ -4,6 +4,7 @@ import gem.gembro.model.User;
 import gem.gembro.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,14 +18,25 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private EmailVerificationService emailVerificationService;
+
+    @Transactional
     public User createUser(User user) {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new RuntimeException("Email already exists");
         }
+
+        if (!emailVerificationService.isEmailVerified(user.getEmail())) {
+            throw new RuntimeException("Please verify your email before creating an account.");
+        }
+
         // Hash the password before saving
         String hashedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        emailVerificationService.clearVerification(user.getEmail());
+        return savedUser;
     }
 
     public Optional<User> getUserById(Long id) {

@@ -72,6 +72,19 @@
                         <input type="email" id="signupEmail" name="signupEmail" class="form-input" placeholder="your@email.com" required>
                         <span class="form-error" id="signupEmailError"></span>
                     </div>
+
+                    <div class="form-group" id="emailVerificationGroup">
+                        <label class="form-label">Email Verification</label>
+                        <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 12px;">
+                            <button type="button" id="sendVerificationCodeBtn" class="btn-gradient" style="padding: 10px 24px; font-size: 14px;">Send Verification Code</button>
+                            <span id="verificationStatus" style="color: var(--text-secondary); font-size: 14px;"></span>
+                        </div>
+                        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                            <input type="text" id="verificationCode" class="form-input" placeholder="Enter 4-digit code" maxlength="4" style="flex: 1 1 180px;" disabled>
+                            <button type="button" id="verifyCodeBtn" class="btn-ghost" style="padding: 10px 24px; font-size: 14px;" disabled>Verify Code</button>
+                        </div>
+                        <span class="form-error" id="verificationCodeError"></span>
+                    </div>
                     
                     <div class="form-group">
                         <label for="signupPhone" class="form-label">Phone Number</label>
@@ -81,13 +94,13 @@
                     
                     <div class="form-group">
                         <label for="signupPassword" class="form-label">Password</label>
-                        <input type="password" id="signupPassword" name="signupPassword" class="form-input" placeholder="Enter your password" required>
+                        <input type="password" id="signupPassword" name="signupPassword" class="form-input" placeholder="Enter your password" required disabled>
                         <span class="form-error" id="signupPasswordError"></span>
                     </div>
                     
                     <div class="form-group">
                         <label for="signupConfirmPassword" class="form-label">Confirm Password</label>
-                        <input type="password" id="signupConfirmPassword" name="signupConfirmPassword" class="form-input" placeholder="Confirm your password" required>
+                        <input type="password" id="signupConfirmPassword" name="signupConfirmPassword" class="form-input" placeholder="Confirm your password" required disabled>
                         <span class="form-error" id="signupConfirmPasswordError"></span>
                     </div>
                     
@@ -171,24 +184,193 @@
 
     <script src="script.js"></script>
     <script>
-        // Signup form handling
+        // Signup form handling with email verification
         document.addEventListener('DOMContentLoaded', function() {
             const signupForm = document.getElementById('signupForm');
+            const signupEmail = document.getElementById('signupEmail');
+            const passwordInput = document.getElementById('signupPassword');
+            const confirmPasswordInput = document.getElementById('signupConfirmPassword');
+            const sendVerificationCodeBtn = document.getElementById('sendVerificationCodeBtn');
+            const verifyCodeBtn = document.getElementById('verifyCodeBtn');
+            const verificationCodeInput = document.getElementById('verificationCode');
+            const verificationCodeError = document.getElementById('verificationCodeError');
+            const verificationStatus = document.getElementById('verificationStatus');
+
+            let isEmailVerified = false;
+            let verifiedEmail = '';
+            let resendInterval = null;
+
+            const togglePasswordFields = (enabled) => {
+                passwordInput.disabled = !enabled;
+                confirmPasswordInput.disabled = !enabled;
+                if (!enabled) {
+                    passwordInput.value = '';
+                    confirmPasswordInput.value = '';
+                }
+            };
+
+            const resetVerificationState = () => {
+                isEmailVerified = false;
+                verifiedEmail = '';
+                verificationCodeInput.value = '';
+                verificationCodeInput.disabled = true;
+                verifyCodeBtn.disabled = true;
+                verificationStatus.textContent = '';
+                verificationStatus.style.color = 'var(--text-secondary)';
+                verificationCodeError.classList.remove('show');
+                verificationCodeError.textContent = '';
+                if (resendInterval) {
+                    clearInterval(resendInterval);
+                    resendInterval = null;
+                }
+                sendVerificationCodeBtn.disabled = false;
+                sendVerificationCodeBtn.textContent = 'Send Verification Code';
+                togglePasswordFields(false);
+            };
+
+            const startResendCountdown = (seconds) => {
+                let remaining = seconds;
+                sendVerificationCodeBtn.disabled = true;
+                sendVerificationCodeBtn.textContent = `Resend in ${remaining}s`;
+                resendInterval = setInterval(() => {
+                    remaining -= 1;
+                    if (remaining <= 0) {
+                        clearInterval(resendInterval);
+                        resendInterval = null;
+                        sendVerificationCodeBtn.disabled = false;
+                        sendVerificationCodeBtn.textContent = 'Resend Code';
+                    } else {
+                        sendVerificationCodeBtn.textContent = `Resend in ${remaining}s`;
+                    }
+                }, 1000);
+            };
+
+            const markEmailVerified = () => {
+                isEmailVerified = true;
+                verifiedEmail = signupEmail.value.trim();
+                verificationStatus.textContent = 'Email verified!';
+                verificationStatus.style.color = 'var(--success)';
+                verificationCodeError.classList.remove('show');
+                verificationCodeInput.disabled = true;
+                verifyCodeBtn.disabled = true;
+                sendVerificationCodeBtn.disabled = true;
+                togglePasswordFields(true);
+            };
+
+            signupEmail.addEventListener('input', () => {
+                if (signupEmail.value.trim().toLowerCase() !== verifiedEmail.toLowerCase()) {
+                    resetVerificationState();
+                }
+            });
+
+            sendVerificationCodeBtn.addEventListener('click', () => {
+                const email = signupEmail.value.trim();
+                document.getElementById('signupEmailError').classList.remove('show');
+                document.getElementById('signupEmailError').textContent = '';
+                verificationCodeError.classList.remove('show');
+                verificationCodeError.textContent = '';
+
+                if (!email) {
+                    document.getElementById('signupEmailError').textContent = 'Please enter an email address.';
+                    document.getElementById('signupEmailError').classList.add('show');
+                    return;
+                }
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                    document.getElementById('signupEmailError').textContent = 'Please enter a valid email address.';
+                    document.getElementById('signupEmailError').classList.add('show');
+                    return;
+                }
+
+                sendVerificationCodeBtn.disabled = true;
+                sendVerificationCodeBtn.textContent = 'Sending...';
+                fetch('/api/auth/send-verification-code', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().then(errorData => {
+                                throw new Error(errorData.error || 'Failed to send verification code');
+                            }).catch(() => {
+                                throw new Error('Failed to send verification code. Please try again.');
+                            });
+                        }
+                        return response.json();
+                    })
+                    .then(() => {
+                        verificationStatus.textContent = 'Verification code sent! Please check your email.';
+                        verificationStatus.style.color = 'var(--text-secondary)';
+                        verificationCodeInput.disabled = false;
+                        verifyCodeBtn.disabled = false;
+                        startResendCountdown(60);
+                    })
+                    .catch(error => {
+                        verificationCodeError.textContent = error.message;
+                        verificationCodeError.classList.add('show');
+                        sendVerificationCodeBtn.disabled = false;
+                        sendVerificationCodeBtn.textContent = 'Send Verification Code';
+                    });
+            });
+
+            verifyCodeBtn.addEventListener('click', () => {
+                const email = signupEmail.value.trim();
+                const code = verificationCodeInput.value.trim();
+                verificationCodeError.classList.remove('show');
+                verificationCodeError.textContent = '';
+
+                if (!code || code.length !== 4) {
+                    verificationCodeError.textContent = 'Please enter the 4-digit verification code.';
+                    verificationCodeError.classList.add('show');
+                    return;
+                }
+
+                verifyCodeBtn.disabled = true;
+                verificationStatus.textContent = 'Verifying code...';
+                verificationStatus.style.color = 'var(--text-secondary)';
+
+                fetch('/api/auth/verify-code', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, code })
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().then(errorData => {
+                                throw new Error(errorData.error || 'Invalid or expired code');
+                            }).catch(() => {
+                                throw new Error('Verification failed. Please try again.');
+                            });
+                        }
+                        return response.json();
+                    })
+                    .then(() => {
+                        markEmailVerified();
+                    })
+                    .catch(error => {
+                        verificationCodeError.textContent = error.message;
+                        verificationCodeError.classList.add('show');
+                        verificationStatus.textContent = '';
+                        verificationStatus.style.color = 'var(--text-secondary)';
+                        verifyCodeBtn.disabled = false;
+                    });
+            });
+
             if (signupForm) {
                 signupForm.addEventListener('submit', function(e) {
                     e.preventDefault();
-                    
+
                     // Clear previous errors
                     document.querySelectorAll('#signupForm .form-error').forEach(error => {
                         error.classList.remove('show');
                         error.textContent = '';
                     });
-                    
+
                     const submitBtn = signupForm.querySelector('button[type="submit"]');
                     const submitText = document.getElementById('signupSubmitText');
                     const successMessage = document.getElementById('signupSuccessMessage');
                     const errorMessage = document.getElementById('signupErrorMessage');
-                    
+
                     // Hide previous messages
                     if (successMessage) {
                         successMessage.classList.remove('show');
@@ -198,23 +380,23 @@
                         errorMessage.classList.remove('show');
                         errorMessage.textContent = '';
                     }
-                    
+
                     // Get form values
                     const fullName = document.getElementById('signupFullName').value.trim();
-                    const email = document.getElementById('signupEmail').value.trim();
+                    const email = signupEmail.value.trim();
                     const phoneNumber = document.getElementById('signupPhone').value.trim();
-                    const password = document.getElementById('signupPassword').value;
-                    const confirmPassword = document.getElementById('signupConfirmPassword').value;
-                    
+                    const password = passwordInput.value;
+                    const confirmPassword = confirmPasswordInput.value;
+
                     // Validation
                     let isValid = true;
-                    
+
                     if (!fullName) {
                         document.getElementById('signupFullNameError').textContent = 'Full name is required.';
                         document.getElementById('signupFullNameError').classList.add('show');
                         isValid = false;
                     }
-                    
+
                     if (!email) {
                         document.getElementById('signupEmailError').textContent = 'Email is required.';
                         document.getElementById('signupEmailError').classList.add('show');
@@ -223,8 +405,12 @@
                         document.getElementById('signupEmailError').textContent = 'Please enter a valid email address.';
                         document.getElementById('signupEmailError').classList.add('show');
                         isValid = false;
+                    } else if (!isEmailVerified || verifiedEmail.toLowerCase() !== email.toLowerCase()) {
+                        document.getElementById('signupEmailError').textContent = 'Please verify your email before creating an account.';
+                        document.getElementById('signupEmailError').classList.add('show');
+                        isValid = false;
                     }
-                    
+
                     if (!password) {
                         document.getElementById('signupPasswordError').textContent = 'Password is required.';
                         document.getElementById('signupPasswordError').classList.add('show');
@@ -234,7 +420,7 @@
                         document.getElementById('signupPasswordError').classList.add('show');
                         isValid = false;
                     }
-                    
+
                     if (!confirmPassword) {
                         document.getElementById('signupConfirmPasswordError').textContent = 'Please confirm your password.';
                         document.getElementById('signupConfirmPasswordError').classList.add('show');
@@ -244,27 +430,27 @@
                         document.getElementById('signupConfirmPasswordError').classList.add('show');
                         isValid = false;
                     }
-                    
+
                     if (!isValid) {
                         return;
                     }
-                    
+
                     // Disable submit button
                     submitBtn.disabled = true;
                     submitText.textContent = 'Creating Account...';
-                    
+
                     // Prepare user data
                     const userData = {
                         fullName: fullName,
                         email: email,
                         password: password
                     };
-                    
+
                     // Add phone number if provided
                     if (phoneNumber) {
                         userData.phoneNumber = phoneNumber;
                     }
-                    
+
                     // Submit to API
                     fetch('/api/users', {
                         method: 'POST',
@@ -273,65 +459,68 @@
                         },
                         body: JSON.stringify(userData)
                     })
-                    .then(response => {
-                        // Check if response is ok
-                        if (!response.ok) {
-                            // Try to parse error response
-                            return response.json().then(errorData => {
-                                throw new Error(errorData.error || 'Failed to create account');
-                            }).catch(() => {
-                                throw new Error('Failed to create account. Please try again.');
-                            });
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        // Success - check if it's actually a user object
-                        if (data.id || data.email) {
-                            if (successMessage) {
-                                successMessage.textContent = 'Account created successfully! Redirecting to login...';
-                                successMessage.classList.add('show');
-                                successMessage.style.color = 'var(--success)';
+                        .then(async response => {
+                            const text = await response.text();
+                            let payload = {};
+                            if (text) {
+                                try {
+                                    payload = JSON.parse(text);
+                                } catch (parseError) {
+                                    console.error('Failed to parse signup response:', parseError, text);
+                                }
                             }
-                            
-                            // Redirect to login page after 2 seconds
-                            setTimeout(() => {
-                                window.location.href = 'login.html';
-                            }, 2000);
-                        } else if (data.error) {
-                            // Handle error from response
+
+                            if (!response.ok) {
+                                throw new Error(payload.error || 'Failed to create account. Please try again.');
+                            }
+
+                            return payload;
+                        })
+                        .then(data => {
+                            if (data.id || data.email) {
+                                if (successMessage) {
+                                    successMessage.textContent = 'Account created successfully! Redirecting to login...';
+                                    successMessage.classList.add('show');
+                                    successMessage.style.color = 'var(--success)';
+                                }
+
+                                setTimeout(() => {
+                                    window.location.href = 'login.html';
+                                }, 2000);
+                            } else if (data.error) {
+                                if (errorMessage) {
+                                    errorMessage.textContent = data.error;
+                                    errorMessage.classList.add('show');
+                                }
+
+                                if (data.error.toLowerCase().includes('email')) {
+                                    document.getElementById('signupEmailError').textContent = data.error;
+                                    document.getElementById('signupEmailError').classList.add('show');
+                                }
+
+                                submitBtn.disabled = false;
+                                submitText.textContent = 'Create Account';
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
                             if (errorMessage) {
-                                errorMessage.textContent = data.error;
+                                errorMessage.textContent = error.message || 'An error occurred. Please try again.';
                                 errorMessage.classList.add('show');
                             }
-                            
-                            // Check if it's an email duplicate error
-                            if (data.error.toLowerCase().includes('email')) {
-                                document.getElementById('signupEmailError').textContent = data.error;
-                                document.getElementById('signupEmailError').classList.add('show');
-                            }
-                            
                             submitBtn.disabled = false;
                             submitText.textContent = 'Create Account';
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        if (errorMessage) {
-                            errorMessage.textContent = error.message || 'An error occurred. Please try again.';
-                            errorMessage.classList.add('show');
-                        }
-                        submitBtn.disabled = false;
-                        submitText.textContent = 'Create Account';
-                    });
+                        });
                 });
             }
-            
+
             // Set current year in footer
             const currentYearElement = document.getElementById('currentYear');
             if (currentYearElement) {
                 currentYearElement.textContent = new Date().getFullYear();
             }
+
+            resetVerificationState();
         });
     </script>
 </body>
