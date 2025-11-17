@@ -92,5 +92,63 @@ public class SellerController {
         sellerService.deleteSeller(id);
         return ResponseEntity.noContent().build();
     }
-}
+
+    @PostMapping("/login")
+    public ResponseEntity<?> sellerLogin(@RequestBody Map<String, String> credentials) {
+        String email = credentials.get("email");
+        String password = credentials.get("password");
+        
+        if (email == null || email.trim().isEmpty() || password == null || password.trim().isEmpty()) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Email and password are required");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        }
+        
+        // Find user by email first
+        Optional<gem.gembro.model.User> userOpt = sellerService.getUserByEmail(email);
+        if (userOpt.isEmpty()) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Invalid email or password");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+        }
+        
+        gem.gembro.model.User user = userOpt.get();
+        
+        // Check password
+        if (!sellerService.validatePassword(password, user.getPassword())) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Invalid email or password");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+        }
+        
+        // Find seller by userId
+        Optional<Seller> sellerOpt = sellerService.getSellerByUserId(user.getId());
+        if (sellerOpt.isEmpty()) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "No seller account found for this email");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        }
+        
+        Seller seller = sellerOpt.get();
+        
+        // Check if seller is approved
+        if (seller.getVerificationStatus() != Seller.VerificationStatus.APPROVED) {
+            Map<String, String> error = new HashMap<>();
+            if (seller.getVerificationStatus() == Seller.VerificationStatus.PENDING) {
+                error.put("error", "Your seller account is pending approval. Please wait for admin approval.");
+            } else if (seller.getVerificationStatus() == Seller.VerificationStatus.REJECTED) {
+                error.put("error", "Your seller account has been rejected. Please contact support.");
+            } else {
+                error.put("error", "Your seller account is not approved yet.");
+            }
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
+        }
+        
+        // Login successful
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("seller", seller);
+        response.put("user", user);
+        return ResponseEntity.ok(response);
+    }
 

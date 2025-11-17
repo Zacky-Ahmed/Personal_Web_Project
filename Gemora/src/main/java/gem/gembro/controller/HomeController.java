@@ -60,5 +60,10 @@ public class HomeController {
     public String adminLogin() {
         return "admin-login";
     }
+
+    @GetMapping("/seller-login.html")
+    public String sellerLogin() {
+        return "seller-login";
+    }
 }
 

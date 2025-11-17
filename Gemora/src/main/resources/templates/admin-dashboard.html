@@ -498,6 +498,10 @@
                             <td>${seller.subscriptionPlan || 'N/A'}</td>
                             <td>${seller.createdAt ? new Date(seller.createdAt).toLocaleDateString() : 'N/A'}</td>
                             <td>
+                                ${seller.verificationStatus === 'PENDING' ? `
+                                    <button class="btn-admin btn-admin-primary" onclick="approveSeller(${seller.id})" style="margin-right: 8px;">Approve</button>
+                                    <button class="btn-admin btn-admin-danger" onclick="rejectSeller(${seller.id})" style="margin-right: 8px;">Reject</button>
+                                ` : ''}
                                 <button class="btn-admin btn-admin-danger" onclick="deleteSeller(${seller.id})">Delete</button>
                             </td>
                         </tr>
@@ -587,6 +591,36 @@
                 fetch(`/api/users/${id}`, { method: 'DELETE' })
                     .then(() => loadUsers())
                     .catch(error => alert('Error deleting user: ' + error));
+            }
+        }
+
+        function approveSeller(id) {
+            if (confirm('Are you sure you want to approve this seller?')) {
+                fetch(`/api/sellers/${id}/approve`, { method: 'POST' })
+                    .then(response => {
+                        if (response.ok) {
+                            loadSellers();
+                            alert('Seller approved successfully!');
+                        } else {
+                            alert('Error approving seller');
+                        }
+                    })
+                    .catch(error => alert('Error approving seller: ' + error));
+            }
+        }
+
+        function rejectSeller(id) {
+            if (confirm('Are you sure you want to reject this seller?')) {
+                fetch(`/api/sellers/${id}/reject`, { method: 'POST' })
+                    .then(response => {
+                        if (response.ok) {
+                            loadSellers();
+                            alert('Seller rejected successfully!');
+                        } else {
+                            alert('Error rejecting seller');
+                        }
+                    })
+                    .catch(error => alert('Error rejecting seller: ' + error));
             }
         }
 

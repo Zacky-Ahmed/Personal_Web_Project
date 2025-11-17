@@ -1,8 +1,11 @@
 package gem.gembro.service;
 
 import gem.gembro.model.Seller;
+import gem.gembro.model.User;
 import gem.gembro.repository.SellerRepository;
+import gem.gembro.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,6 +15,12 @@ import java.util.Optional;
 public class SellerService {
     @Autowired
     private SellerRepository sellerRepository;
+    
+    @Autowired
+    private UserRepository userRepository;
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public Seller createSeller(Seller seller) {
         if (seller.getNicNumber() != null && sellerRepository.existsByNicNumber(seller.getNicNumber())) {
@@ -59,6 +68,14 @@ public class SellerService {
 
     public void deleteSeller(Long id) {
         sellerRepository.deleteById(id);
+    }
+    
+    public Optional<User> getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+    
+    public boolean validatePassword(String rawPassword, String encodedPassword) {
+        return passwordEncoder.matches(rawPassword, encodedPassword);
     }
 }
 
