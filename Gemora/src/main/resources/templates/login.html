@@ -39,6 +39,7 @@
                 <a href="contact.html" class="nav-link">Contact</a>
             </div>
             <div class="nav-actions">
+                <a href="signup.html" class="btn-ghost">Sign Up</a>
                 <a href="login.html" class="btn-ghost">Sign In</a>
                 <a href="seller.html" class="btn-gradient">Become Seller</a>
             </div>
@@ -200,21 +201,66 @@
                     submitBtn.disabled = true;
                     submitText.textContent = 'Signing in...';
                     
-                    // Simulate login
-                    setTimeout(() => {
-                        // For demo purposes, show success
-                        if (successMessage) {
-                            successMessage.textContent = 'Login successful! Redirecting...';
-                            successMessage.classList.add('show');
-                            successMessage.style.color = 'var(--success)';
+                    // Hide previous messages
+                    if (successMessage) {
+                        successMessage.classList.remove('show');
+                        successMessage.textContent = '';
+                    }
+                    if (errorMessage) {
+                        errorMessage.classList.remove('show');
+                        errorMessage.textContent = '';
+                    }
+                    
+                    // Submit to API
+                    fetch('/api/users/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            email: email,
+                            password: password
+                        })
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().then(errorData => {
+                                throw new Error(errorData.error || 'Login failed');
+                            }).catch(() => {
+                                throw new Error('Login failed. Please try again.');
+                            });
                         }
-                        
-                        setTimeout(() => {
-                            alert('Login successful! (This is a demo - no actual authentication is performed)');
-                            // In a real app, you would redirect to dashboard
-                            // window.location.href = 'dashboard.html';
-                        }, 1500);
-                    }, 1200);
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success && data.user) {
+                            // Store user info in sessionStorage
+                            sessionStorage.setItem('userInfo', JSON.stringify(data.user));
+                            
+                            // Show success message
+                            if (successMessage) {
+                                successMessage.textContent = 'Login successful! Redirecting...';
+                                successMessage.classList.add('show');
+                                successMessage.style.color = 'var(--success)';
+                            }
+                            
+                            // Redirect to user dashboard after 1 second
+                            setTimeout(() => {
+                                window.location.href = 'user-dashboard.html';
+                            }, 1000);
+                        } else {
+                            throw new Error('Invalid response from server');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Login error:', error);
+                        if (errorMessage) {
+                            errorMessage.textContent = error.message || 'Invalid email or password. Please try again.';
+                            errorMessage.classList.add('show');
+                        }
+                        submitBtn.disabled = false;
+                        submitText.textContent = 'Sign In';
+                    });
                 });
             }
         });

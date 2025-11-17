@@ -39,6 +39,7 @@
                 <a href="contact.html" class="nav-link">Contact</a>
             </div>
             <div class="nav-actions">
+                <a href="signup.html" class="btn-ghost">Sign Up</a>
                 <a href="login.html" class="btn-ghost">Sign In</a>
                 <a href="seller.html" class="btn-gradient">Become Seller</a>
             </div>
@@ -272,10 +273,33 @@
                         },
                         body: JSON.stringify(userData)
                     })
-                    .then(response => response.json())
+                    .then(response => {
+                        // Check if response is ok
+                        if (!response.ok) {
+                            // Try to parse error response
+                            return response.json().then(errorData => {
+                                throw new Error(errorData.error || 'Failed to create account');
+                            }).catch(() => {
+                                throw new Error('Failed to create account. Please try again.');
+                            });
+                        }
+                        return response.json();
+                    })
                     .then(data => {
-                        if (data.error) {
-                            // Handle error
+                        // Success - check if it's actually a user object
+                        if (data.id || data.email) {
+                            if (successMessage) {
+                                successMessage.textContent = 'Account created successfully! Redirecting to login...';
+                                successMessage.classList.add('show');
+                                successMessage.style.color = 'var(--success)';
+                            }
+                            
+                            // Redirect to login page after 2 seconds
+                            setTimeout(() => {
+                                window.location.href = 'login.html';
+                            }, 2000);
+                        } else if (data.error) {
+                            // Handle error from response
                             if (errorMessage) {
                                 errorMessage.textContent = data.error;
                                 errorMessage.classList.add('show');
@@ -289,24 +313,12 @@
                             
                             submitBtn.disabled = false;
                             submitText.textContent = 'Create Account';
-                        } else {
-                            // Success
-                            if (successMessage) {
-                                successMessage.textContent = 'Account created successfully! Redirecting to login...';
-                                successMessage.classList.add('show');
-                                successMessage.style.color = 'var(--success)';
-                            }
-                            
-                            // Redirect to login page after 2 seconds
-                            setTimeout(() => {
-                                window.location.href = 'login.html';
-                            }, 2000);
                         }
                     })
                     .catch(error => {
                         console.error('Error:', error);
                         if (errorMessage) {
-                            errorMessage.textContent = 'An error occurred. Please try again.';
+                            errorMessage.textContent = error.message || 'An error occurred. Please try again.';
                             errorMessage.classList.add('show');
                         }
                         submitBtn.disabled = false;

@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | GemBro</title>
+    <meta name="description" content="Admin dashboard for managing GemBro platform">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+            background: var(--bg-secondary);
+        }
+        .admin-sidebar {
+            width: 260px;
+            background: var(--bg-primary);
+            border-right: 1px solid var(--border-color);
+            padding: 24px;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        .admin-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .admin-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .admin-nav-item {
+            margin-bottom: 8px;
+        }
+        .admin-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .admin-nav-link:hover {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+        .admin-nav-link.active {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+        }
+        .admin-main {
+            flex: 1;
+            margin-left: 260px;
+            padding: 32px;
+        }
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+        .admin-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+        .stat-card {
+            background: var(--bg-primary);
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .admin-section {
+            background: var(--bg-primary);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .table-container {
+            overflow-x: auto;
+        }
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .admin-table th,
+        .admin-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .admin-table th {
+            background: var(--bg-secondary);
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+        .admin-table td {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .admin-table tr:hover {
+            background: var(--bg-secondary);
+        }
+        .btn-admin {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .btn-admin-danger {
+            background: #ef4444;
+            color: white;
+        }
+        .btn-admin-danger:hover {
+            background: #dc2626;
+        }
+        .btn-admin-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-admin-primary:hover {
+            background: var(--primary-dark);
+        }
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-active {
+            background: #10b981;
+            color: white;
+        }
+        .status-inactive {
+            background: #6b7280;
+            color: white;
+        }
+        .status-sold {
+            background: #ef4444;
+            color: white;
+        }
+        .hidden {
+            display: none;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <div class="logo-icon">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16 2L6 10L16 30L26 10L16 2Z" fill="url(#adminLogoGradient)"/>
+                        <defs>
+                            <linearGradient id="adminLogoGradient" x1="16" y1="2" x2="16" y2="30" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#6366f1"/>
+                                <stop offset="50%" stop-color="#8b5cf6"/>
+                                <stop offset="100%" stop-color="#ec4899"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <span class="logo-text">GemBro Admin</span>
+            </div>
+            <nav>
+                <ul class="admin-nav">
+                    <li class="admin-nav-item">
+                        <a href="#" class="admin-nav-link active" onclick="showSection('overview'); return false;">
+                            <span>📊</span> Overview
+                        </a>
+                    </li>
+                    <li class="admin-nav-item">
+                        <a href="#" class="admin-nav-link" onclick="showSection('users'); return false;">
+                            <span>👥</span> Users
+                        </a>
+                    </li>
+                    <li class="admin-nav-item">
+                        <a href="#" class="admin-nav-link" onclick="showSection('sellers'); return false;">
+                            <span>🏪</span> Sellers
+                        </a>
+                    </li>
+                    <li class="admin-nav-item">
+                        <a href="#" class="admin-nav-link" onclick="showSection('gemstones'); return false;">
+                            <span>💎</span> Gemstones
+                        </a>
+                    </li>
+                    <li class="admin-nav-item">
+                        <a href="#" class="admin-nav-link" onclick="showSection('messages'); return false;">
+                            <span>📧</span> Messages
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border-color);">
+                <a href="index.html" class="btn-ghost" style="width: 100%; text-align: center; display: block;">← Back to Site</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <div class="admin-header">
+                <h1 class="admin-title">Admin Dashboard</h1>
+                <button class="btn-admin btn-admin-danger" onclick="logout()">Logout</button>
+            </div>
+
+            <!-- Overview Section -->
+            <section id="overview-section" class="admin-section">
+                <h2 class="section-title">Overview</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalUsers">-</div>
+                        <div class="stat-label">Total Users</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalSellers">-</div>
+                        <div class="stat-label">Total Sellers</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalGemstones">-</div>
+                        <div class="stat-label">Total Gemstones</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="activeGemstones">-</div>
+                        <div class="stat-label">Active Listings</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalMessages">-</div>
+                        <div class="stat-label">Contact Messages</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Users Section -->
+            <section id="users-section" class="admin-section hidden">
+                <div class="section-header">
+                    <h2 class="section-title">Users Management</h2>
+                </div>
+                <div class="table-container">
+                    <div id="usersLoading" class="loading">Loading users...</div>
+                    <table id="usersTable" class="admin-table hidden">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Full Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Created At</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Sellers Section -->
+            <section id="sellers-section" class="admin-section hidden">
+                <div class="section-header">
+                    <h2 class="section-title">Sellers Management</h2>
+                </div>
+                <div class="table-container">
+                    <div id="sellersLoading" class="loading">Loading sellers...</div>
+                    <table id="sellersTable" class="admin-table hidden">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Business Name</th>
+                                <th>User ID</th>
+                                <th>Address</th>
+                                <th>Status</th>
+                                <th>Plan</th>
+                                <th>Created At</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sellersTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Gemstones Section -->
+            <section id="gemstones-section" class="admin-section hidden">
+                <div class="section-header">
+                    <h2 class="section-title">Gemstones Management</h2>
+                </div>
+                <div class="table-container">
+                    <div id="gemstonesLoading" class="loading">Loading gemstones...</div>
+                    <table id="gemstonesTable" class="admin-table hidden">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Carat</th>
+                                <th>Price</th>
+                                <th>Status</th>
+                                <th>Seller ID</th>
+                                <th>Views</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="gemstonesTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Messages Section -->
+            <section id="messages-section" class="admin-section hidden">
+                <div class="section-header">
+                    <h2 class="section-title">Contact Messages</h2>
+                </div>
+                <div class="table-container">
+                    <div id="messagesLoading" class="loading">Loading messages...</div>
+                    <table id="messagesTable" class="admin-table hidden">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Subject</th>
+                                <th>Message</th>
+                                <th>Created At</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="messagesTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Show specific section
+        function showSection(section) {
+            // Hide all sections
+            document.querySelectorAll('.admin-section').forEach(sec => {
+                sec.classList.add('hidden');
+            });
+            
+            // Remove active class from all nav links
+            document.querySelectorAll('.admin-nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(section + '-section').classList.remove('hidden');
+            
+            // Add active class to clicked nav link
+            event.target.closest('.admin-nav-link').classList.add('active');
+            
+            // Load data for the section
+            loadSectionData(section);
+        }
+
+        // Load data for specific section
+        function loadSectionData(section) {
+            switch(section) {
+                case 'overview':
+                    loadOverview();
+                    break;
+                case 'users':
+                    loadUsers();
+                    break;
+                case 'sellers':
+                    loadSellers();
+                    break;
+                case 'gemstones':
+                    loadGemstones();
+                    break;
+                case 'messages':
+                    loadMessages();
+                    break;
+            }
+        }
+
+        // Load overview statistics
+        function loadOverview() {
+            Promise.all([
+                fetch('/api/users').then(r => r.json()),
+                fetch('/api/sellers').then(r => r.json()),
+                fetch('/api/gemstones').then(r => r.json()),
+                fetch('/api/contact').then(r => r.json())
+            ]).then(([users, sellers, gemstones, messages]) => {
+                document.getElementById('totalUsers').textContent = users.length;
+                document.getElementById('totalSellers').textContent = sellers.length;
+                document.getElementById('totalGemstones').textContent = gemstones.length;
+                document.getElementById('activeGemstones').textContent = 
+                    gemstones.filter(g => g.status === 'ACTIVE').length;
+                document.getElementById('totalMessages').textContent = messages.length;
+            }).catch(error => {
+                console.error('Error loading overview:', error);
+            });
+        }
+
+        // Load users
+        function loadUsers() {
+            const loading = document.getElementById('usersLoading');
+            const table = document.getElementById('usersTable');
+            const tbody = document.getElementById('usersTableBody');
+            
+            loading.classList.remove('hidden');
+            table.classList.add('hidden');
+            
+            fetch('/api/users')
+                .then(response => response.json())
+                .then(users => {
+                    tbody.innerHTML = users.map(user => `
+                        <tr>
+                            <td>${user.id}</td>
+                            <td>${user.fullName || 'N/A'}</td>
+                            <td>${user.email}</td>
+                            <td>${user.phoneNumber || 'N/A'}</td>
+                            <td>${user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}</td>
+                            <td>
+                                <button class="btn-admin btn-admin-danger" onclick="deleteUser(${user.id})">Delete</button>
+                            </td>
+                        </tr>
+                    `).join('');
+                    loading.classList.add('hidden');
+                    table.classList.remove('hidden');
+                })
+                .catch(error => {
+                    console.error('Error loading users:', error);
+                    loading.textContent = 'Error loading users';
+                });
+        }
+
+        // Load sellers
+        function loadSellers() {
+            const loading = document.getElementById('sellersLoading');
+            const table = document.getElementById('sellersTable');
+            const tbody = document.getElementById('sellersTableBody');
+            
+            loading.classList.remove('hidden');
+            table.classList.add('hidden');
+            
+            fetch('/api/sellers')
+                .then(response => response.json())
+                .then(sellers => {
+                    tbody.innerHTML = sellers.map(seller => `
+                        <tr>
+                            <td>${seller.id}</td>
+                            <td>${seller.businessName || 'N/A'}</td>
+                            <td>${seller.userId || 'N/A'}</td>
+                            <td>${seller.address || 'N/A'}</td>
+                            <td><span class="status-badge ${seller.verificationStatus === 'APPROVED' ? 'status-active' : seller.verificationStatus === 'REJECTED' ? 'status-sold' : 'status-inactive'}">${seller.verificationStatus || 'PENDING'}</span></td>
+                            <td>${seller.subscriptionPlan || 'N/A'}</td>
+                            <td>${seller.createdAt ? new Date(seller.createdAt).toLocaleDateString() : 'N/A'}</td>
+                            <td>
+                                <button class="btn-admin btn-admin-danger" onclick="deleteSeller(${seller.id})">Delete</button>
+                            </td>
+                        </tr>
+                    `).join('');
+                    loading.classList.add('hidden');
+                    table.classList.remove('hidden');
+                })
+                .catch(error => {
+                    console.error('Error loading sellers:', error);
+                    loading.textContent = 'Error loading sellers';
+                });
+        }
+
+        // Load gemstones
+        function loadGemstones() {
+            const loading = document.getElementById('gemstonesLoading');
+            const table = document.getElementById('gemstonesTable');
+            const tbody = document.getElementById('gemstonesTableBody');
+            
+            loading.classList.remove('hidden');
+            table.classList.add('hidden');
+            
+            fetch('/api/gemstones')
+                .then(response => response.json())
+                .then(gemstones => {
+                    tbody.innerHTML = gemstones.map(gem => `
+                        <tr>
+                            <td>${gem.id}</td>
+                            <td>${gem.name || 'N/A'}</td>
+                            <td>${gem.gemType || 'N/A'}</td>
+                            <td>${gem.caratWeight || 'N/A'}</td>
+                            <td>${gem.price ? '$' + parseFloat(gem.price).toLocaleString() : 'N/A'}</td>
+                            <td><span class="status-badge ${gem.status === 'ACTIVE' ? 'status-active' : gem.status === 'SOLD' ? 'status-sold' : 'status-inactive'}">${gem.status || 'INACTIVE'}</span></td>
+                            <td>${gem.sellerId}</td>
+                            <td>${gem.viewsCount || 0}</td>
+                            <td>
+                                <button class="btn-admin btn-admin-danger" onclick="deleteGemstone(${gem.id})">Delete</button>
+                            </td>
+                        </tr>
+                    `).join('');
+                    loading.classList.add('hidden');
+                    table.classList.remove('hidden');
+                })
+                .catch(error => {
+                    console.error('Error loading gemstones:', error);
+                    loading.textContent = 'Error loading gemstones';
+                });
+        }
+
+        // Load messages
+        function loadMessages() {
+            const loading = document.getElementById('messagesLoading');
+            const table = document.getElementById('messagesTable');
+            const tbody = document.getElementById('messagesTableBody');
+            
+            loading.classList.remove('hidden');
+            table.classList.add('hidden');
+            
+            fetch('/api/contact')
+                .then(response => response.json())
+                .then(messages => {
+                    tbody.innerHTML = messages.map(msg => `
+                        <tr>
+                            <td>${msg.id}</td>
+                            <td>${msg.name || 'N/A'}</td>
+                            <td>${msg.email || 'N/A'}</td>
+                            <td>${msg.subject || 'N/A'}</td>
+                            <td>${msg.message ? (msg.message.substring(0, 50) + (msg.message.length > 50 ? '...' : '')) : 'N/A'}</td>
+                            <td>${msg.createdAt ? new Date(msg.createdAt).toLocaleDateString() : 'N/A'}</td>
+                            <td>
+                                <button class="btn-admin btn-admin-danger" onclick="deleteMessage(${msg.id})">Delete</button>
+                            </td>
+                        </tr>
+                    `).join('');
+                    loading.classList.add('hidden');
+                    table.classList.remove('hidden');
+                })
+                .catch(error => {
+                    console.error('Error loading messages:', error);
+                    loading.textContent = 'Error loading messages';
+                });
+        }
+
+        // Delete functions
+        function deleteUser(id) {
+            if (confirm('Are you sure you want to delete this user?')) {
+                fetch(`/api/users/${id}`, { method: 'DELETE' })
+                    .then(() => loadUsers())
+                    .catch(error => alert('Error deleting user: ' + error));
+            }
+        }
+
+        function deleteSeller(id) {
+            if (confirm('Are you sure you want to delete this seller?')) {
+                fetch(`/api/sellers/${id}`, { method: 'DELETE' })
+                    .then(() => loadSellers())
+                    .catch(error => alert('Error deleting seller: ' + error));
+            }
+        }
+
+        function deleteGemstone(id) {
+            if (confirm('Are you sure you want to delete this gemstone?')) {
+                fetch(`/api/gemstones/${id}`, { method: 'DELETE' })
+                    .then(() => loadGemstones())
+                    .catch(error => alert('Error deleting gemstone: ' + error));
+            }
+        }
+
+        function deleteMessage(id) {
+            if (confirm('Are you sure you want to delete this message?')) {
+                fetch(`/api/contact/${id}`, { method: 'DELETE' })
+                    .then(() => loadMessages())
+                    .catch(error => alert('Error deleting message: ' + error));
+            }
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Check admin authentication
+        function checkAdminAuth() {
+            if (sessionStorage.getItem('adminAuthenticated') !== 'true') {
+                window.location.href = 'admin-login.html';
+                return false;
+            }
+            return true;
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                sessionStorage.removeItem('adminAuthenticated');
+                sessionStorage.removeItem('adminEmail');
+                window.location.href = 'admin-login.html';
+            }
+        }
+
+        // Load overview on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            if (checkAdminAuth()) {
+                loadOverview();
+            }
+        });
+    </script>
+</body>
+</html>
+

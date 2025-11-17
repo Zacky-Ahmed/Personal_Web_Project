@@ -21,12 +21,28 @@ public class UserController {
     @PostMapping
     public ResponseEntity<?> createUser(@RequestBody User user) {
         try {
+            // Validate required fields
+            if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
+                Map<String, String> error = new HashMap<>();
+                error.put("error", "Email is required");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+            }
+            if (user.getPassword() == null || user.getPassword().trim().isEmpty()) {
+                Map<String, String> error = new HashMap<>();
+                error.put("error", "Password is required");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+            }
+            
             User createdUser = userService.createUser(user);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
         } catch (RuntimeException e) {
             Map<String, String> error = new HashMap<>();
             error.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        } catch (Exception e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "An error occurred while creating the account: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
         }
     }
 
@@ -59,17 +75,27 @@ public class UserController {
         String email = credentials.get("email");
         String password = credentials.get("password");
         
+        if (email == null || email.trim().isEmpty() || password == null || password.trim().isEmpty()) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Email and password are required");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        }
+        
         if (userService.validateLogin(email, password)) {
             User user = userService.getUserByEmail(email).orElse(null);
-            Map<String, Object> response = new HashMap<>();
-            response.put("success", true);
-            response.put("user", user);
-            return ResponseEntity.ok(response);
-        } else {
-            Map<String, String> error = new HashMap<>();
-            error.put("error", "Invalid email or password");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+            if (user != null) {
+                // Don't send password back to client
+                user.setPassword(null);
+                Map<String, Object> response = new HashMap<>();
+                response.put("success", true);
+                response.put("user", user);
+                return ResponseEntity.ok(response);
+            }
         }
+        
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Invalid email or password");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
 }
 
