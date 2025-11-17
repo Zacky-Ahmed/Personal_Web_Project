@@ -108,7 +108,7 @@
                         </svg>
                     </div>
                     <h3>Required Documents</h3>
-                    <p>Upload your government-issued NIC or Passport, and the latest GemReg certificate for gemstone trading.</p>
+                    <p>Upload your government-issued NIC or Passport. GemReg certificates help speed up verification but remain optional.</p>
                 </div>
                 <div class="info-card">
                     <div class="info-icon">
@@ -140,6 +140,13 @@
                 <p>Fill out the form below to start your seller journey. Our team will review your application within 24 hours.</p>
             </div>
             <form id="sellerForm" class="seller-form">
+                <div class="info-box" id="sellerLoginNotice" style="display: none; margin-bottom: 24px;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 8v4m0 4h.01"/>
+                    </svg>
+                    <p>Please sign in to your user account before submitting a seller application.</p>
+                </div>
                 <div class="form-row">
                     <div class="form-group">
                         <label for="fullName" class="form-label">Full Name *</label>
@@ -172,8 +179,8 @@
                         <span class="form-error" id="nicNumberError"></span>
                     </div>
                     <div class="form-group">
-                        <label for="gemRegNumber" class="form-label">GemReg License Number</label>
-                        <input type="text" id="gemRegNumber" name="gemRegNumber" class="form-input" placeholder="Registered GemReg identifier">
+                        <label for="gemRegNumber" class="form-label">GemReg License Number (Optional)</label>
+                        <input type="text" id="gemRegNumber" name="gemRegNumber" class="form-input" placeholder="Registered GemReg identifier (if available)">
                     </div>
                 </div>
 
@@ -193,9 +200,9 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="gemRegFile" class="form-label">Upload GemReg Certificate *</label>
+                        <label for="gemRegFile" class="form-label">Upload GemReg Certificate (Optional)</label>
                         <div class="file-upload">
-                            <input type="file" id="gemRegFile" name="gemRegFile" accept="image/*,.pdf" class="file-input" required>
+                            <input type="file" id="gemRegFile" name="gemRegFile" accept="image/*,.pdf" class="file-input">
                             <label for="gemRegFile" class="file-label">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
@@ -239,6 +246,7 @@
                         <span id="submitText">Submit Application</span>
                     </button>
                     <p class="form-success" id="successMessage"></p>
+                    <p class="form-error" id="sellerFormError"></p>
                 </div>
             </form>
         </div>

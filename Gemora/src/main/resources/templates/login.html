@@ -244,10 +244,33 @@
                                 successMessage.style.color = 'var(--success)';
                             }
                             
-                            // Redirect to user dashboard after 1 second
-                            setTimeout(() => {
-                                window.location.href = 'user-dashboard.html';
-                            }, 1000);
+                            // Check if user is a seller, redirect accordingly
+                            fetch(`/api/sellers/user/${data.user.id}`)
+                                .then(response => {
+                                    if (response.ok) {
+                                        return response.json().then(seller => {
+                                            if (seller.verificationStatus === 'APPROVED') {
+                                                // User is an approved seller, redirect to seller dashboard
+                                                sessionStorage.setItem('sellerInfo', JSON.stringify(seller));
+                                                // Sync navigation if function is available
+                                                if (typeof window.syncNavWithAuth === 'function') {
+                                                    window.syncNavWithAuth();
+                                                }
+                                                window.location.href = 'seller-dashboard.html';
+                                            } else {
+                                                // User has seller account but not approved, redirect to marketplace
+                                                window.location.href = 'marketplace.html';
+                                            }
+                                        });
+                                    } else {
+                                        // Regular user, redirect to marketplace
+                                        window.location.href = 'marketplace.html';
+                                    }
+                                })
+                                .catch(() => {
+                                    // Error checking seller status, redirect to marketplace
+                                    window.location.href = 'marketplace.html';
+                                });
                         } else {
                             throw new Error('Invalid response from server');
                         }

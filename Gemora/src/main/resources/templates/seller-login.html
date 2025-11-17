@@ -188,6 +188,11 @@
                             sessionStorage.setItem('sellerInfo', JSON.stringify(data.seller));
                             sessionStorage.setItem('userInfo', JSON.stringify(data.user));
                             
+                            // Sync navigation if function is available
+                            if (typeof window.syncNavWithAuth === 'function') {
+                                window.syncNavWithAuth();
+                            }
+                            
                             // Show success message
                             if (successMessage) {
                                 successMessage.textContent = 'Login successful! Redirecting...';

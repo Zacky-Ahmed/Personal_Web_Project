@@ -36,6 +36,11 @@ public class HomeController {
         return "marketplace";
     }
 
+    @GetMapping("/product-view.html")
+    public String productView() {
+        return "product-view";
+    }
+
     @GetMapping("/seller.html")
     public String seller() {
         return "seller";
@@ -48,7 +53,8 @@ public class HomeController {
 
     @GetMapping("/user-dashboard.html")
     public String userDashboard() {
-        return "user-dashboard";
+        // Redirect regular users to marketplace (only sellers have dashboards)
+        return "redirect:/marketplace.html";
     }
 
     @GetMapping("/admin-dashboard.html")
@@ -64,6 +70,21 @@ public class HomeController {
     @GetMapping("/seller-login.html")
     public String sellerLogin() {
         return "seller-login";
+    }
+
+    @GetMapping("/upload-product.html")
+    public String uploadProduct() {
+        return "upload-product";
+    }
+
+    @GetMapping("/seller-dashboard.html")
+    public String sellerDashboard() {
+        return "seller-dashboard";
+    }
+
+    @GetMapping("/payment.html")
+    public String payment() {
+        return "payment";
     }
 }
 

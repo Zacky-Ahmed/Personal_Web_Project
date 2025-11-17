@@ -52,6 +52,46 @@ document.addEventListener('DOMContentLoaded', function() {
     if (sellerForm) {
         const formInputs = sellerForm.querySelectorAll('input, textarea');
         const fileInputs = sellerForm.querySelectorAll('input[type="file"]');
+        const loginNotice = document.getElementById('sellerLoginNotice');
+        const submitBtn = document.getElementById('submitBtn');
+        const submitText = document.getElementById('submitText');
+        const successMessage = document.getElementById('successMessage');
+        const generalError = document.getElementById('sellerFormError');
+
+        const activeUser = (() => {
+            try {
+                return JSON.parse(sessionStorage.getItem('userInfo'));
+            } catch (error) {
+                return null;
+            }
+        })();
+
+        const isAuthenticated = !!(activeUser && activeUser.id);
+
+        const setGuestState = (disabled) => {
+            if (loginNotice) {
+                loginNotice.style.display = disabled ? 'flex' : 'none';
+            }
+            sellerForm.classList.toggle('disabled', disabled);
+            formInputs.forEach(input => {
+                if (disabled) {
+                    input.setAttribute('disabled', 'disabled');
+                } else {
+                    input.removeAttribute('disabled');
+                }
+            });
+            if (disabled) {
+                submitBtn.setAttribute('disabled', 'disabled');
+            } else {
+                submitBtn.removeAttribute('disabled');
+            }
+        };
+
+        if (!isAuthenticated) {
+            setGuestState(true);
+        } else {
+            setGuestState(false);
+        }
         
         // Handle file input changes
         fileInputs.forEach(input => {
@@ -66,19 +106,27 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
 
-        // Form validation
+        // Form submission
         sellerForm.addEventListener('submit', function(e) {
             e.preventDefault();
+
+            if (!isAuthenticated) {
+                if (generalError) {
+                    generalError.textContent = 'Please sign in to submit an application.';
+                    generalError.classList.add('show');
+                }
+                return;
+            }
             
             // Clear previous errors
             document.querySelectorAll('.form-error').forEach(error => {
                 error.classList.remove('show');
                 error.textContent = '';
             });
-            
-            const submitBtn = document.getElementById('submitBtn');
-            const submitText = document.getElementById('submitText');
-            const successMessage = document.getElementById('successMessage');
+            if (generalError) {
+                generalError.textContent = '';
+                generalError.classList.remove('show');
+            }
             
             // Get form data
             const formData = new FormData(sellerForm);
@@ -114,11 +162,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 errors.push({ field: 'nicFile', message: 'NIC scan is required.' });
             }
             
-            if (!gemRegFile || gemRegFile.size === 0) {
-                errors.push({ field: 'gemRegFile', message: 'GemReg certificate is required.' });
-            }
-            
-            // Display errors
+            // Display field errors
             if (errors.length > 0) {
                 errors.forEach(error => {
                     const errorElement = document.getElementById(error.field + 'Error');
@@ -134,38 +178,59 @@ document.addEventListener('DOMContentLoaded', function() {
             submitBtn.disabled = true;
             submitText.textContent = 'Submitting application...';
             
-            // Simulate form submission
-            setTimeout(() => {
-                // Reset form
+            const payload = {
+                userId: activeUser.id,
+                fullName,
+                email,
+                phoneNumber: phone,
+                businessName: formData.get('businessName')?.trim() || null,
+                nicNumber,
+                gemRegNumber: formData.get('gemRegNumber')?.trim() || null,
+                nicFileName: nicFile?.name || null,
+                gemRegFileName: gemRegFile?.name || null,
+                address: formData.get('address')?.trim() || null,
+                notes: formData.get('message')?.trim() || null
+            };
+
+            fetch('/api/seller-applications', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(errorData => {
+                        throw new Error(errorData.error || 'Unable to submit application');
+                    }).catch(() => {
+                        throw new Error('Unable to submit application');
+                    });
+                }
+                return response.json();
+            })
+            .then(() => {
                 sellerForm.reset();
-                
-                // Clear file names
                 document.querySelectorAll('.file-name').forEach(el => {
                     el.textContent = 'No file chosen';
                 });
-                
-                // Show success message
+
                 if (successMessage) {
-                    successMessage.textContent = 'Thank you! Your application has been received. Our onboarding team will contact you soon.';
+                    successMessage.textContent = 'Application submitted! Our admin team will review and notify you via email.';
                     successMessage.classList.add('show');
+                    successMessage.style.color = 'var(--success)';
                 }
-                
-                // Reset submit button
+            })
+            .catch(error => {
+                if (generalError) {
+                    generalError.textContent = error.message;
+                    generalError.classList.add('show');
+                }
+            })
+            .finally(() => {
                 submitBtn.disabled = false;
                 submitText.textContent = 'Submit Application';
-                
-                // Scroll to success message
-                if (successMessage) {
-                    successMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                }
-                
-                // Hide success message after 10 seconds
-                setTimeout(() => {
-                    if (successMessage) {
-                        successMessage.classList.remove('show');
-                    }
-                }, 10000);
-            }, 1200);
+            });
         });
         
         // Clear errors on input
@@ -175,6 +240,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (errorElement) {
                     errorElement.classList.remove('show');
                     errorElement.textContent = '';
+                }
+                if (generalError) {
+                    generalError.classList.remove('show');
+                    generalError.textContent = '';
                 }
             });
         });
@@ -229,6 +298,193 @@ document.addEventListener('DOMContentLoaded', function() {
             lastScroll = currentScroll;
         });
     }
+
+    // Auth-aware navigation state
+    const navActionsWrapper = document.querySelector('.nav-actions');
+
+    const parseStoredUser = () => {
+        const raw = sessionStorage.getItem('userInfo');
+        if (!raw) {
+            return null;
+        }
+        try {
+            return JSON.parse(raw);
+        } catch (error) {
+            console.warn('Unable to parse stored user info', error);
+            sessionStorage.removeItem('userInfo');
+            return null;
+        }
+    };
+
+    const handleLogout = () => {
+        sessionStorage.removeItem('userInfo');
+        sessionStorage.removeItem('sellerInfo');
+        window.location.href = 'login.html';
+    };
+
+    const ensureDashboardLink = () => {
+        if (!navMenu) return;
+        // Only show dashboard for sellers
+        const sellerInfo = sessionStorage.getItem('sellerInfo');
+        if (!sellerInfo) {
+            removeDashboardLink();
+            return;
+        }
+
+        try {
+            const seller = JSON.parse(sellerInfo);
+            if (seller.verificationStatus !== 'APPROVED') {
+                removeDashboardLink();
+                return;
+            }
+        } catch (e) {
+            removeDashboardLink();
+            return;
+        }
+
+        const dashboardLinks = Array.from(navMenu.querySelectorAll('a[href="seller-dashboard.html"], [data-nav="dashboard"]'));
+        dashboardLinks.slice(1).forEach(link => link.remove());
+
+        let dashboardLink = dashboardLinks[0];
+        if (!dashboardLink) {
+            dashboardLink = document.createElement('a');
+            dashboardLink.href = 'seller-dashboard.html';
+            dashboardLink.textContent = 'Dashboard';
+            navMenu.insertBefore(dashboardLink, navMenu.firstChild);
+        }
+
+        dashboardLink.dataset.nav = 'dashboard';
+        dashboardLink.classList.add('nav-link');
+        dashboardLink.style.display = 'inline-flex';
+    };
+
+    const removeDashboardLink = () => {
+        if (!navMenu) return;
+        const dashboardLink = navMenu.querySelector('[data-nav="dashboard"]');
+        if (dashboardLink) {
+            dashboardLink.remove();
+        }
+    };
+
+    const ensureLogoutButton = () => {
+        if (!navActionsWrapper) return null;
+
+        const candidates = navActionsWrapper.querySelectorAll('[data-auth="logout"], #navLogoutBtn, a[onclick="logout()"]');
+        let primary = null;
+
+        candidates.forEach((btn, index) => {
+            if (!primary) {
+                primary = btn;
+            } else {
+                btn.remove();
+            }
+        });
+
+        if (primary) {
+            if (primary.tagName === 'A') {
+                primary.href = 'javascript:void(0)';
+            }
+            primary.id = 'navLogoutBtn';
+            primary.classList.add('nav-logout-btn');
+            primary.dataset.auth = 'logout';
+            if (!primary.dataset.logoutBound) {
+                primary.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    handleLogout();
+                });
+                primary.dataset.logoutBound = 'true';
+            }
+            return primary;
+        }
+
+        const newBtn = document.createElement('button');
+        newBtn.type = 'button';
+        newBtn.id = 'navLogoutBtn';
+        newBtn.className = 'nav-logout-btn';
+        newBtn.textContent = 'Log Out';
+        newBtn.dataset.auth = 'logout';
+        newBtn.dataset.logoutBound = 'true';
+        newBtn.addEventListener('click', handleLogout);
+        navActionsWrapper.appendChild(newBtn);
+        return newBtn;
+    };
+
+    const removeLogoutButton = () => {
+        const logoutBtn = document.getElementById('navLogoutBtn');
+        if (logoutBtn) {
+            logoutBtn.remove();
+        }
+    };
+
+    const setPricingReviewVisibility = (visible) => {
+        const targets = document.querySelectorAll('.nav-menu a[href="index.html#plans"], .nav-menu a[href="index.html#testimonials"]');
+        targets.forEach(link => {
+            link.style.display = visible ? '' : 'none';
+        });
+    };
+
+    const setBecomeSellerVisibility = (visible) => {
+        // Hide "Become Seller" buttons in navigation and throughout the page
+        const becomeSellerButtons = document.querySelectorAll('a[href="seller.html"]');
+        becomeSellerButtons.forEach(btn => {
+            // Check if it's in the nav-actions (navbar) or anywhere else
+            if (btn.closest('.nav-actions') || btn.classList.contains('btn-gradient') || btn.classList.contains('btn-hero-primary') || btn.classList.contains('btn-primary-large')) {
+                btn.style.display = visible ? '' : 'none';
+            }
+        });
+    };
+
+    const syncNavWithAuth = () => {
+        const user = parseStoredUser();
+        const sellerInfo = sessionStorage.getItem('sellerInfo');
+        const guestButtons = document.querySelectorAll('.nav-actions a[href="signup.html"], .nav-actions a[href="login.html"]');
+
+        if (user) {
+            guestButtons.forEach(btn => {
+                btn.style.display = 'none';
+            });
+            ensureDashboardLink();
+            const logoutBtn = ensureLogoutButton();
+            if (logoutBtn) {
+                logoutBtn.style.display = 'inline-flex';
+            }
+            setPricingReviewVisibility(false);
+            
+            // Hide "Become Seller" button if user is already a seller
+            if (sellerInfo) {
+                try {
+                    const seller = JSON.parse(sellerInfo);
+                    if (seller.verificationStatus === 'APPROVED') {
+                        setBecomeSellerVisibility(false);
+                    } else {
+                        setBecomeSellerVisibility(true);
+                    }
+                } catch (e) {
+                    setBecomeSellerVisibility(true);
+                }
+            } else {
+                setBecomeSellerVisibility(true);
+            }
+        } else {
+            guestButtons.forEach(btn => {
+                btn.style.display = '';
+            });
+            removeDashboardLink();
+            removeLogoutButton();
+            setPricingReviewVisibility(true);
+            setBecomeSellerVisibility(true);
+        }
+    };
+
+    syncNavWithAuth();
+    window.addEventListener('storage', (event) => {
+        if (event.key === 'userInfo' || event.key === 'sellerInfo') {
+            syncNavWithAuth();
+        }
+    });
+    
+    // Expose syncNavWithAuth globally so login pages can call it after setting sellerInfo
+    window.syncNavWithAuth = syncNavWithAuth;
 });
 
 // Button handlers for index.html
@@ -238,9 +494,40 @@ function handleContactSeller() {
     }
 }
 
-function handleChoosePlan() {
-    alert('Redirecting to seller registration...');
-    window.location.href = 'seller.html';
+function handleChoosePlan(planName) {
+    // Check if user is logged in
+    const userInfo = sessionStorage.getItem('userInfo');
+    if (!userInfo) {
+        if (confirm('You need to be logged in to choose a plan. Would you like to go to the login page?')) {
+            window.location.href = 'login.html';
+        }
+        return;
+    }
+
+    // Check if user is a seller
+    const sellerInfo = sessionStorage.getItem('sellerInfo');
+    if (!sellerInfo) {
+        // User is not a seller, redirect to seller registration
+        if (confirm('You need to register as a seller first. Would you like to go to the seller registration page?')) {
+            window.location.href = 'seller.html';
+        }
+        return;
+    }
+
+    // Check if seller is approved
+    try {
+        const seller = JSON.parse(sellerInfo);
+        if (seller.verificationStatus !== 'APPROVED') {
+            alert('Your seller account must be approved before you can subscribe to a plan. Please wait for admin approval.');
+            return;
+        }
+
+        // Seller is approved, redirect to payment page
+        const planParam = planName ? `?plan=${planName.toLowerCase()}` : '';
+        window.location.href = `payment.html${planParam}`;
+    } catch (e) {
+        window.location.href = 'seller-login.html';
+    }
 }
 
 function handlePremiumBoost() {
@@ -270,7 +557,16 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!button.onclick) {
             button.addEventListener('click', function(e) {
                 e.preventDefault();
-                handleChoosePlan();
+                // Try to find the plan name from the parent plan-card
+                const planCard = button.closest('.plan-card');
+                let planName = null;
+                if (planCard) {
+                    const planTitle = planCard.querySelector('h3')?.textContent?.toLowerCase();
+                    if (planTitle?.includes('starter')) planName = 'starter';
+                    else if (planTitle?.includes('growth')) planName = 'growth';
+                    else if (planTitle?.includes('elite')) planName = 'elite';
+                }
+                handleChoosePlan(planName);
             });
         }
     });
