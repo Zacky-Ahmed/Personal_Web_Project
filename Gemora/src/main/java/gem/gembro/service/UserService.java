@@ -34,6 +34,7 @@ public class UserService {
         // Hash the password before saving
         String hashedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);
+        user.setPasswordResetRequired(false);
         User savedUser = userRepository.save(user);
         emailVerificationService.clearVerification(user.getEmail());
         return savedUser;
@@ -80,6 +81,22 @@ public class UserService {
             return passwordEncoder.matches(password, user.get().getPassword());
         }
         return false;
+    }
+
+    public boolean passwordsMatch(User user, String rawPassword) {
+        return passwordEncoder.matches(rawPassword, user.getPassword());
+    }
+
+    public User setTemporaryPassword(User user, String rawPassword, boolean forceReset) {
+        user.setPassword(passwordEncoder.encode(rawPassword));
+        user.setPasswordResetRequired(forceReset);
+        return userRepository.save(user);
+    }
+
+    public User completePasswordReset(User user, String newPassword) {
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setPasswordResetRequired(false);
+        return userRepository.save(user);
     }
 }
 

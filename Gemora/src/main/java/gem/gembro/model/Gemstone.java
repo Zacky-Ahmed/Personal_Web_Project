@@ -41,6 +41,9 @@ public class Gemstone {
     @Column(name = "certificate_number")
     private String certificateNumber;
 
+    @Column(name = "certificate_file_path")
+    private String certificateFilePath;
+
     @Column(name = "price", precision = 18, scale = 2)
     private BigDecimal price;
 
@@ -171,6 +174,14 @@ public class Gemstone {
 
     public void setCertificateNumber(String certificateNumber) {
         this.certificateNumber = certificateNumber;
+    }
+
+    public String getCertificateFilePath() {
+        return certificateFilePath;
+    }
+
+    public void setCertificateFilePath(String certificateFilePath) {
+        this.certificateFilePath = certificateFilePath;
     }
 
     public BigDecimal getPrice() {

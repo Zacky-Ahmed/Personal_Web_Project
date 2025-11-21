@@ -24,6 +24,9 @@ public class User {
     @Column(name = "phone_number")
     private String phoneNumber;
 
+    @Column(name = "password_reset_required")
+    private Boolean passwordResetRequired = false;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
@@ -80,6 +83,14 @@ public class User {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public Boolean getPasswordResetRequired() {
+        return passwordResetRequired;
+    }
+
+    public void setPasswordResetRequired(Boolean passwordResetRequired) {
+        this.passwordResetRequired = passwordResetRequired;
     }
 
     public LocalDateTime getCreatedAt() {

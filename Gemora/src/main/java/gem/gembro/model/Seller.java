@@ -37,7 +37,7 @@ public class Seller {
 
     @Column(name = "subscription_plan")
     @Enumerated(EnumType.STRING)
-    private SubscriptionPlan subscriptionPlan;
+    private SubscriptionPlan subscriptionPlan = SubscriptionPlan.FREE;
 
     @Column(name = "premium_boosts_left")
     private Integer premiumBoostsLeft = 0;
@@ -64,7 +64,7 @@ public class Seller {
     }
 
     public enum SubscriptionPlan {
-        STARTER, GROWTH, ELITE
+        FREE, PREMIUM, GROWTH, ELITE
     }
 
     // Getters and Setters

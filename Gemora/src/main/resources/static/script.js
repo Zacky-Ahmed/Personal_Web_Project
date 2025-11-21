@@ -52,6 +52,25 @@ document.addEventListener('DOMContentLoaded', function() {
     if (sellerForm) {
         const formInputs = sellerForm.querySelectorAll('input, textarea');
         const fileInputs = sellerForm.querySelectorAll('input[type="file"]');
+        const loginNotice = document.getElementById('sellerLoginNotice');
+        const submitBtn = document.getElementById('submitBtn');
+        const submitText = document.getElementById('submitText');
+        const successMessage = document.getElementById('successMessage');
+        const generalError = document.getElementById('sellerFormError');
+
+        const activeUser = (() => {
+            try {
+                return JSON.parse(sessionStorage.getItem('userInfo'));
+            } catch (error) {
+                return null;
+            }
+        })();
+
+        const isAuthenticated = !!(activeUser && activeUser.id);
+
+        if (loginNotice) {
+            loginNotice.style.display = isAuthenticated ? 'none' : 'flex';
+        }
         
         // Handle file input changes
         fileInputs.forEach(input => {
@@ -66,19 +85,19 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
 
-        // Form validation
+        // Form submission
         sellerForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            
+
             // Clear previous errors
             document.querySelectorAll('.form-error').forEach(error => {
                 error.classList.remove('show');
                 error.textContent = '';
             });
-            
-            const submitBtn = document.getElementById('submitBtn');
-            const submitText = document.getElementById('submitText');
-            const successMessage = document.getElementById('successMessage');
+            if (generalError) {
+                generalError.textContent = '';
+                generalError.classList.remove('show');
+            }
             
             // Get form data
             const formData = new FormData(sellerForm);
@@ -89,7 +108,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const email = formData.get('email')?.trim();
             const phone = formData.get('phone')?.trim();
             const nicNumber = formData.get('nicNumber')?.trim();
-            const nicFile = formData.get('nicFile');
+            const nicFrontFile = formData.get('nicFrontFile');
+            const nicBackFile = formData.get('nicBackFile');
             const gemRegFile = formData.get('gemRegFile');
             
             if (!fullName) {
@@ -110,15 +130,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 errors.push({ field: 'nicNumber', message: 'NIC number is required.' });
             }
             
-            if (!nicFile || nicFile.size === 0) {
-                errors.push({ field: 'nicFile', message: 'NIC scan is required.' });
+            if (!nicFrontFile || nicFrontFile.size === 0) {
+                errors.push({ field: 'nicFrontFile', message: 'NIC front image is required.' });
             }
             
-            if (!gemRegFile || gemRegFile.size === 0) {
-                errors.push({ field: 'gemRegFile', message: 'GemReg certificate is required.' });
+            if (!nicBackFile || nicBackFile.size === 0) {
+                errors.push({ field: 'nicBackFile', message: 'NIC back image is required.' });
             }
             
-            // Display errors
+            // Display field errors
             if (errors.length > 0) {
                 errors.forEach(error => {
                     const errorElement = document.getElementById(error.field + 'Error');
@@ -134,38 +154,62 @@ document.addEventListener('DOMContentLoaded', function() {
             submitBtn.disabled = true;
             submitText.textContent = 'Submitting application...';
             
-            // Simulate form submission
-            setTimeout(() => {
-                // Reset form
+            const payload = new FormData();
+            payload.append('userId', activeUser?.id ?? '');
+            payload.append('fullName', fullName);
+            payload.append('email', email);
+            payload.append('phoneNumber', phone);
+            payload.append('businessName', formData.get('businessName')?.trim() || '');
+            payload.append('nicNumber', nicNumber);
+            payload.append('gemRegNumber', formData.get('gemRegNumber')?.trim() || '');
+            payload.append('address', formData.get('address')?.trim() || '');
+            payload.append('notes', formData.get('message')?.trim() || '');
+            if (nicFrontFile) {
+                payload.append('nicFrontFile', nicFrontFile);
+            }
+            if (nicBackFile) {
+                payload.append('nicBackFile', nicBackFile);
+            }
+            if (gemRegFile && gemRegFile.size > 0) {
+                payload.append('gemRegFile', gemRegFile);
+            }
+
+            fetch('/api/seller-applications', {
+                method: 'POST',
+                body: payload
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(errorData => {
+                        throw new Error(errorData.error || 'Unable to submit application');
+                    }).catch(() => {
+                        throw new Error('Unable to submit application');
+                    });
+                }
+                return response.json();
+            })
+            .then(() => {
                 sellerForm.reset();
-                
-                // Clear file names
                 document.querySelectorAll('.file-name').forEach(el => {
                     el.textContent = 'No file chosen';
                 });
-                
-                // Show success message
+
                 if (successMessage) {
-                    successMessage.textContent = 'Thank you! Your application has been received. Our onboarding team will contact you soon.';
+                    successMessage.textContent = 'Application submitted! Our admin team will review and notify you via email.';
                     successMessage.classList.add('show');
+                    successMessage.style.color = 'var(--success)';
                 }
-                
-                // Reset submit button
+            })
+            .catch(error => {
+                if (generalError) {
+                    generalError.textContent = error.message;
+                    generalError.classList.add('show');
+                }
+            })
+            .finally(() => {
                 submitBtn.disabled = false;
                 submitText.textContent = 'Submit Application';
-                
-                // Scroll to success message
-                if (successMessage) {
-                    successMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                }
-                
-                // Hide success message after 10 seconds
-                setTimeout(() => {
-                    if (successMessage) {
-                        successMessage.classList.remove('show');
-                    }
-                }, 10000);
-            }, 1200);
+            });
         });
         
         // Clear errors on input
@@ -175,6 +219,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (errorElement) {
                     errorElement.classList.remove('show');
                     errorElement.textContent = '';
+                }
+                if (generalError) {
+                    generalError.classList.remove('show');
+                    generalError.textContent = '';
                 }
             });
         });
@@ -229,6 +277,193 @@ document.addEventListener('DOMContentLoaded', function() {
             lastScroll = currentScroll;
         });
     }
+
+    // Auth-aware navigation state
+    const navActionsWrapper = document.querySelector('.nav-actions');
+
+    const parseStoredUser = () => {
+        const raw = sessionStorage.getItem('userInfo');
+        if (!raw) {
+            return null;
+        }
+        try {
+            return JSON.parse(raw);
+        } catch (error) {
+            console.warn('Unable to parse stored user info', error);
+            sessionStorage.removeItem('userInfo');
+            return null;
+        }
+    };
+
+    const handleLogout = () => {
+        sessionStorage.removeItem('userInfo');
+        sessionStorage.removeItem('sellerInfo');
+        window.location.href = 'login.html';
+    };
+
+    const ensureDashboardLink = () => {
+        if (!navMenu) return;
+        // Only show dashboard for sellers
+        const sellerInfo = sessionStorage.getItem('sellerInfo');
+        if (!sellerInfo) {
+            removeDashboardLink();
+            return;
+        }
+
+        try {
+            const seller = JSON.parse(sellerInfo);
+            if (seller.verificationStatus !== 'APPROVED') {
+                removeDashboardLink();
+                return;
+            }
+        } catch (e) {
+            removeDashboardLink();
+            return;
+        }
+
+        const dashboardLinks = Array.from(navMenu.querySelectorAll('a[href="seller-dashboard.html"], [data-nav="dashboard"]'));
+        dashboardLinks.slice(1).forEach(link => link.remove());
+
+        let dashboardLink = dashboardLinks[0];
+        if (!dashboardLink) {
+            dashboardLink = document.createElement('a');
+            dashboardLink.href = 'seller-dashboard.html';
+            dashboardLink.textContent = 'Dashboard';
+            navMenu.insertBefore(dashboardLink, navMenu.firstChild);
+        }
+
+        dashboardLink.dataset.nav = 'dashboard';
+        dashboardLink.classList.add('nav-link');
+        dashboardLink.style.display = 'inline-flex';
+    };
+
+    const removeDashboardLink = () => {
+        if (!navMenu) return;
+        const dashboardLink = navMenu.querySelector('[data-nav="dashboard"]');
+        if (dashboardLink) {
+            dashboardLink.remove();
+        }
+    };
+
+    const ensureLogoutButton = () => {
+        if (!navActionsWrapper) return null;
+
+        const candidates = navActionsWrapper.querySelectorAll('[data-auth="logout"], #navLogoutBtn, a[onclick="logout()"]');
+        let primary = null;
+
+        candidates.forEach((btn, index) => {
+            if (!primary) {
+                primary = btn;
+            } else {
+                btn.remove();
+            }
+        });
+
+        if (primary) {
+            if (primary.tagName === 'A') {
+                primary.href = 'javascript:void(0)';
+            }
+            primary.id = 'navLogoutBtn';
+            primary.classList.add('nav-logout-btn');
+            primary.dataset.auth = 'logout';
+            if (!primary.dataset.logoutBound) {
+                primary.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    handleLogout();
+                });
+                primary.dataset.logoutBound = 'true';
+            }
+            return primary;
+        }
+
+        const newBtn = document.createElement('button');
+        newBtn.type = 'button';
+        newBtn.id = 'navLogoutBtn';
+        newBtn.className = 'nav-logout-btn';
+        newBtn.textContent = 'Log Out';
+        newBtn.dataset.auth = 'logout';
+        newBtn.dataset.logoutBound = 'true';
+        newBtn.addEventListener('click', handleLogout);
+        navActionsWrapper.appendChild(newBtn);
+        return newBtn;
+    };
+
+    const removeLogoutButton = () => {
+        const logoutBtn = document.getElementById('navLogoutBtn');
+        if (logoutBtn) {
+            logoutBtn.remove();
+        }
+    };
+
+    const setPricingReviewVisibility = (visible) => {
+        const targets = document.querySelectorAll('.nav-menu a[href="index.html#testimonials"]');
+        targets.forEach(link => {
+            link.style.display = visible ? '' : 'none';
+        });
+    };
+
+    const setBecomeSellerVisibility = (visible) => {
+        // Hide "Become Seller" buttons in navigation and throughout the page
+        const becomeSellerButtons = document.querySelectorAll('a[href="seller.html"]');
+        becomeSellerButtons.forEach(btn => {
+            // Check if it's in the nav-actions (navbar) or anywhere else
+            if (btn.closest('.nav-actions') || btn.classList.contains('btn-gradient') || btn.classList.contains('btn-hero-primary') || btn.classList.contains('btn-primary-large')) {
+                btn.style.display = visible ? '' : 'none';
+            }
+        });
+    };
+
+    const syncNavWithAuth = () => {
+        const user = parseStoredUser();
+        const sellerInfo = sessionStorage.getItem('sellerInfo');
+        const guestButtons = document.querySelectorAll('.nav-actions a[href="signup.html"], .nav-actions a[href="login.html"]');
+
+        if (user) {
+            guestButtons.forEach(btn => {
+                btn.style.display = 'none';
+            });
+            ensureDashboardLink();
+            const logoutBtn = ensureLogoutButton();
+            if (logoutBtn) {
+                logoutBtn.style.display = 'inline-flex';
+            }
+            setPricingReviewVisibility(false);
+            
+            // Hide "Become Seller" button if user is already a seller
+            if (sellerInfo) {
+                try {
+                    const seller = JSON.parse(sellerInfo);
+                    if (seller.verificationStatus === 'APPROVED') {
+                        setBecomeSellerVisibility(false);
+                    } else {
+                        setBecomeSellerVisibility(true);
+                    }
+                } catch (e) {
+                    setBecomeSellerVisibility(true);
+                }
+            } else {
+                setBecomeSellerVisibility(true);
+            }
+        } else {
+            guestButtons.forEach(btn => {
+                btn.style.display = '';
+            });
+            removeDashboardLink();
+            removeLogoutButton();
+            setPricingReviewVisibility(true);
+            setBecomeSellerVisibility(true);
+        }
+    };
+
+    syncNavWithAuth();
+    window.addEventListener('storage', (event) => {
+        if (event.key === 'userInfo' || event.key === 'sellerInfo') {
+            syncNavWithAuth();
+        }
+    });
+    
+    // Expose syncNavWithAuth globally so login pages can call it after setting sellerInfo
+    window.syncNavWithAuth = syncNavWithAuth;
 });
 
 // Button handlers for index.html
@@ -238,20 +473,8 @@ function handleContactSeller() {
     }
 }
 
-function handleChoosePlan() {
-    alert('Redirecting to seller registration...');
-    window.location.href = 'seller.html';
-}
-
-function handlePremiumBoost() {
-    alert('Premium boost feature. Please sign in to activate premium boosts for your listings.');
-    window.location.href = 'login.html';
-}
-
 // Make functions globally available
 window.handleContactSeller = handleContactSeller;
-window.handleChoosePlan = handleChoosePlan;
-window.handlePremiumBoost = handlePremiumBoost;
 
 // Add click handlers for all contact seller buttons
 document.addEventListener('DOMContentLoaded', function() {
@@ -265,14 +488,5 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Handle choose plan buttons
-    document.querySelectorAll('.btn-plan').forEach(button => {
-        if (!button.onclick) {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                handleChoosePlan();
-            });
-        }
-    });
 });
 

@@ -270,11 +270,12 @@
             gemstonesGrid.style.display = 'grid';
             noResultsMessage.style.display = 'none';
 
+            const lkrFormatter = new Intl.NumberFormat('en-LK', { style: 'currency', currency: 'LKR', maximumFractionDigits: 0 });
             gemstonesGrid.innerHTML = gemstones.map(gemstone => {
-                const price = gemstone.price ? `$${parseFloat(gemstone.price).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}` : 'Price on request';
+                const price = gemstone.price ? lkrFormatter.format(parseFloat(gemstone.price)) : 'Price on request';
                 const carat = gemstone.caratWeight ? `${gemstone.caratWeight} ct` : 'N/A';
                 const imageUrl = gemstone.imageUrl || 'https://via.placeholder.com/400x300?text=Gemstone';
-                const premiumBadge = gemstone.isPremiumBoosted ? '<span class="premium-badge">Premium</span>' : '';
+                const premiumBadge = '';
                 const statusBadge = gemstone.status === 'SOLD' ? '<span class="sold-badge">Sold</span>' : '';
 
                 return `

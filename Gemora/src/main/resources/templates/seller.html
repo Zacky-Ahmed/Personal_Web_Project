@@ -37,7 +37,6 @@
             <div class="nav-menu" id="navMenu">
                 <a href="marketplace.html" class="nav-link">Marketplace</a>
                 <a href="index.html#workflow" class="nav-link">How It Works</a>
-                <a href="index.html#plans" class="nav-link">Pricing</a>
                 <a href="index.html#testimonials" class="nav-link">Reviews</a>
                 <a href="contact.html" class="nav-link">Contact</a>
             </div>
@@ -68,7 +67,7 @@
                         <span>Become a GemBro Seller</span>
                 </div>
                 <h1 class="seller-title">Start Selling Certified Gems Today</h1>
-                <p class="seller-subtitle">Submit your credentials, get verified within 24 hours, and unlock premium features to reach serious buyers worldwide. <strong>Note: You must wait for admin approval before you can login as a seller.</strong></p>
+                <p class="seller-subtitle">Submit your credentials, get verified within 24 hours, and reach serious Sri Lankan buyers with unlimited free listings. <strong>Note: You must wait for admin approval before you can login as a seller.</strong></p>
                 <div class="seller-features">
                     <div class="seller-feature-item">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -108,7 +107,7 @@
                         </svg>
                     </div>
                     <h3>Required Documents</h3>
-                    <p>Upload your government-issued NIC or Passport, and the latest GemReg certificate for gemstone trading.</p>
+                    <p>Upload your government-issued NIC or Passport. GemReg certificates help speed up verification but remain optional.</p>
                 </div>
                 <div class="info-card">
                     <div class="info-icon">
@@ -126,7 +125,7 @@
                         </svg>
                     </div>
                     <h3>Marketplace Access</h3>
-                    <p>Once approved, publish listings, schedule premium boosts, and access the analytics dashboard.</p>
+                    <p>Once approved, publish listings and access the analytics dashboard.</p>
                 </div>
             </div>
         </div>
@@ -140,6 +139,13 @@
                 <p>Fill out the form below to start your seller journey. Our team will review your application within 24 hours.</p>
             </div>
             <form id="sellerForm" class="seller-form">
+                <div class="info-box" id="sellerLoginNotice" style="display: none; margin-bottom: 24px;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 8v4m0 4h.01"/>
+                    </svg>
+                    <p>Please sign in to your user account before submitting a seller application.</p>
+                </div>
                 <div class="form-row">
                     <div class="form-group">
                         <label for="fullName" class="form-label">Full Name *</label>
@@ -172,30 +178,46 @@
                         <span class="form-error" id="nicNumberError"></span>
                     </div>
                     <div class="form-group">
-                        <label for="gemRegNumber" class="form-label">GemReg License Number</label>
-                        <input type="text" id="gemRegNumber" name="gemRegNumber" class="form-input" placeholder="Registered GemReg identifier">
+                        <label for="gemRegNumber" class="form-label">GemReg License Number (Optional)</label>
+                        <input type="text" id="gemRegNumber" name="gemRegNumber" class="form-input" placeholder="Registered GemReg identifier (if available)">
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="nicFile" class="form-label">Upload NIC Scan *</label>
+                        <label for="nicFrontFile" class="form-label">Upload NIC Front *</label>
                         <div class="file-upload">
-                            <input type="file" id="nicFile" name="nicFile" accept="image/*,.pdf" class="file-input" required>
-                            <label for="nicFile" class="file-label">
+                            <input type="file" id="nicFrontFile" name="nicFrontFile" accept="image/*,.pdf" class="file-input" required>
+                            <label for="nicFrontFile" class="file-label">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
                                 </svg>
                                 <span>Choose File</span>
                             </label>
-                            <p class="file-name" id="nicFileName">No file chosen</p>
-                            <span class="form-error" id="nicFileError"></span>
+                            <p class="file-name" id="nicFrontFileName">No file chosen</p>
+                            <span class="form-error" id="nicFrontFileError"></span>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="gemRegFile" class="form-label">Upload GemReg Certificate *</label>
+                        <label for="nicBackFile" class="form-label">Upload NIC Back *</label>
                         <div class="file-upload">
-                            <input type="file" id="gemRegFile" name="gemRegFile" accept="image/*,.pdf" class="file-input" required>
+                            <input type="file" id="nicBackFile" name="nicBackFile" accept="image/*,.pdf" class="file-input" required>
+                            <label for="nicBackFile" class="file-label">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                                </svg>
+                                <span>Choose File</span>
+                            </label>
+                            <p class="file-name" id="nicBackFileName">No file chosen</p>
+                            <span class="form-error" id="nicBackFileError"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="gemRegFile" class="form-label">Upload GemReg Certificate (Optional)</label>
+                        <div class="file-upload">
+                            <input type="file" id="gemRegFile" name="gemRegFile" accept="image/*,.pdf" class="file-input">
                             <label for="gemRegFile" class="file-label">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
@@ -230,7 +252,7 @@
                             <circle cx="12" cy="12" r="10"/>
                             <path d="M12 6v6l4 2"/>
                         </svg>
-                        <p>While your account is under review, you can prepare listings and select a subscription plan. Billing starts after approval.</p>
+                        <p>While your account is under review, prep your listings—everything publishes for free once approval lands.</p>
                     </div>
                 </div>
 
@@ -239,6 +261,7 @@
                         <span id="submitText">Submit Application</span>
                     </button>
                     <p class="form-success" id="successMessage"></p>
+                    <p class="form-error" id="sellerFormError"></p>
                 </div>
             </form>
         </div>

@@ -29,7 +29,6 @@
             <div class="nav-menu" id="navMenu">
                 <a href="marketplace.html" class="nav-link">Marketplace</a>
                 <a href="index.html#workflow" class="nav-link">How It Works</a>
-                <a href="index.html#plans" class="nav-link">Pricing</a>
                 <a href="contact.html" class="nav-link">Contact</a>
             </div>
             <div class="nav-actions">
@@ -187,6 +186,11 @@
                             // Store seller info in sessionStorage
                             sessionStorage.setItem('sellerInfo', JSON.stringify(data.seller));
                             sessionStorage.setItem('userInfo', JSON.stringify(data.user));
+                            
+                            // Sync navigation if function is available
+                            if (typeof window.syncNavWithAuth === 'function') {
+                                window.syncNavWithAuth();
+                            }
                             
                             // Show success message
                             if (successMessage) {

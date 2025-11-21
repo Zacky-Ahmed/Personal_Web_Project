@@ -34,7 +34,6 @@
             <div class="nav-menu" id="navMenu">
                 <a href="marketplace.html" class="nav-link">Marketplace</a>
                 <a href="index.html#workflow" class="nav-link">How It Works</a>
-                <a href="index.html#plans" class="nav-link">Pricing</a>
                 <a href="index.html#testimonials" class="nav-link">Reviews</a>
                 <a href="contact.html" class="nav-link">Contact</a>
             </div>
@@ -98,6 +97,35 @@
                         </p>
                     </div>
                 </form>
+
+                <div id="passwordResetCard" class="seller-form" style="padding: 32px; margin-top: 32px; display: none;">
+                    <h3 style="font-size: 20px; margin-bottom: 12px;">Verify & set a new password</h3>
+                    <p style="color: var(--text-secondary); font-size: 14px;" id="passwordResetMessage"></p>
+                    <form id="passwordResetForm" style="margin-top: 24px;">
+                        <div class="form-group">
+                            <label for="resetCode" class="form-label">Verification Code</label>
+                            <input type="text" id="resetCode" class="form-input" placeholder="Enter 4-digit code" required>
+                        </div>
+                        <div class="form-row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px;">
+                            <div class="form-group">
+                                <label for="newPassword" class="form-label">New Password</label>
+                                <input type="password" id="newPassword" class="form-input" placeholder="New password" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="confirmNewPassword" class="form-label">Confirm Password</label>
+                                <input type="password" id="confirmNewPassword" class="form-input" placeholder="Confirm password" required>
+                            </div>
+                        </div>
+                        <div class="form-actions" style="margin-top: 24px;">
+                            <button type="submit" class="btn-primary-large" style="width: 100%;">
+                                <span id="resetSubmitText">Verify & Update Password</span>
+                            </button>
+                            <button type="button" class="btn-ghost" id="resendCodeBtn" style="margin-top: 12px; width: 100%;">Resend code</button>
+                            <p class="form-success" id="passwordResetSuccess"></p>
+                            <p class="form-error" id="passwordResetError"></p>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </section>
@@ -167,6 +195,42 @@
         // Login form handling
         document.addEventListener('DOMContentLoaded', function() {
             const loginForm = document.getElementById('loginForm');
+            const passwordResetCard = document.getElementById('passwordResetCard');
+            const passwordResetForm = document.getElementById('passwordResetForm');
+            const passwordResetMessage = document.getElementById('passwordResetMessage');
+            const passwordResetError = document.getElementById('passwordResetError');
+            const passwordResetSuccess = document.getElementById('passwordResetSuccess');
+            const resendCodeBtn = document.getElementById('resendCodeBtn');
+            let pendingResetEmail = null;
+
+            const showPasswordResetCard = (email, message) => {
+                pendingResetEmail = email;
+                if (passwordResetCard) {
+                    passwordResetCard.style.display = 'block';
+                }
+                if (passwordResetMessage) {
+                    passwordResetMessage.textContent = message || `Enter the verification code sent to ${email}.`;
+                }
+                if (passwordResetError) {
+                    passwordResetError.textContent = '';
+                    passwordResetError.classList.remove('show');
+                }
+                if (passwordResetSuccess) {
+                    passwordResetSuccess.textContent = '';
+                    passwordResetSuccess.classList.remove('show');
+                }
+            };
+
+            const hidePasswordResetCard = () => {
+                pendingResetEmail = null;
+                if (passwordResetCard) {
+                    passwordResetCard.style.display = 'none';
+                }
+                if (passwordResetForm) {
+                    passwordResetForm.reset();
+                }
+            };
+
             if (loginForm) {
                 loginForm.addEventListener('submit', function(e) {
                     e.preventDefault();
@@ -233,6 +297,12 @@
                         return response.json();
                     })
                     .then(data => {
+                        if (data.requirePasswordReset) {
+                            showPasswordResetCard(email, data.message);
+                            submitBtn.disabled = false;
+                            submitText.textContent = 'Sign In';
+                            return;
+                        }
                         if (data.success && data.user) {
                             // Store user info in sessionStorage
                             sessionStorage.setItem('userInfo', JSON.stringify(data.user));
@@ -244,10 +314,33 @@
                                 successMessage.style.color = 'var(--success)';
                             }
                             
-                            // Redirect to user dashboard after 1 second
-                            setTimeout(() => {
-                                window.location.href = 'user-dashboard.html';
-                            }, 1000);
+                            // Check if user is a seller, redirect accordingly
+                            fetch(`/api/sellers/user/${data.user.id}`)
+                                .then(response => {
+                                    if (response.ok) {
+                                        return response.json().then(seller => {
+                                            if (seller.verificationStatus === 'APPROVED') {
+                                                // User is an approved seller, redirect to seller dashboard
+                                                sessionStorage.setItem('sellerInfo', JSON.stringify(seller));
+                                                // Sync navigation if function is available
+                                                if (typeof window.syncNavWithAuth === 'function') {
+                                                    window.syncNavWithAuth();
+                                                }
+                                                window.location.href = 'seller-dashboard.html';
+                                            } else {
+                                                // User has seller account but not approved, redirect to marketplace
+                                                window.location.href = 'marketplace.html';
+                                            }
+                                        });
+                                    } else {
+                                        // Regular user, redirect to marketplace
+                                        window.location.href = 'marketplace.html';
+                                    }
+                                })
+                                .catch(() => {
+                                    // Error checking seller status, redirect to marketplace
+                                    window.location.href = 'marketplace.html';
+                                });
                         } else {
                             throw new Error('Invalid response from server');
                         }
@@ -260,6 +353,94 @@
                         }
                         submitBtn.disabled = false;
                         submitText.textContent = 'Sign In';
+                    });
+                });
+            }
+
+            if (passwordResetForm) {
+                passwordResetForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    if (!pendingResetEmail) {
+                        return;
+                    }
+                    const code = document.getElementById('resetCode').value.trim();
+                    const newPassword = document.getElementById('newPassword').value;
+                    const confirmPassword = document.getElementById('confirmNewPassword').value;
+
+                    if (newPassword !== confirmPassword) {
+                        if (passwordResetError) {
+                            passwordResetError.textContent = 'Passwords do not match.';
+                            passwordResetError.classList.add('show');
+                        }
+                        return;
+                    }
+
+                    document.getElementById('resetSubmitText').textContent = 'Updating...';
+
+                    fetch('/api/users/complete-password-reset', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            email: pendingResetEmail,
+                            code,
+                            newPassword
+                        })
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().then(errorData => {
+                                throw new Error(errorData.error || 'Unable to reset password.');
+                            }).catch(() => {
+                                throw new Error('Unable to reset password.');
+                            });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (passwordResetSuccess) {
+                            passwordResetSuccess.textContent = data.message || 'Password updated. Please sign in.';
+                            passwordResetSuccess.classList.add('show');
+                        }
+                        hidePasswordResetCard();
+                    })
+                    .catch(error => {
+                        if (passwordResetError) {
+                            passwordResetError.textContent = error.message;
+                            passwordResetError.classList.add('show');
+                        }
+                    })
+                    .finally(() => {
+                        document.getElementById('resetSubmitText').textContent = 'Verify & Update Password';
+                    });
+                });
+            }
+
+            if (resendCodeBtn) {
+                resendCodeBtn.addEventListener('click', function() {
+                    if (!pendingResetEmail) return;
+                    resendCodeBtn.textContent = 'Sending...';
+                    resendCodeBtn.disabled = true;
+                    fetch('/api/auth/send-verification-code', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: pendingResetEmail })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (passwordResetSuccess) {
+                            passwordResetSuccess.textContent = 'Verification code resent.';
+                            passwordResetSuccess.classList.add('show');
+                        }
+                    })
+                    .catch(() => {
+                        if (passwordResetError) {
+                            passwordResetError.textContent = 'Unable to resend code right now.';
+                            passwordResetError.classList.add('show');
+                        }
+                    })
+                    .finally(() => {
+                        resendCodeBtn.textContent = 'Resend code';
+                        resendCodeBtn.disabled = false;
                     });
                 });
             }
