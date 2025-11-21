@@ -75,7 +75,7 @@ public class GemstoneController {
     @PostMapping("/{id}/premium-boost")
     public ResponseEntity<?> activatePremiumBoost(@PathVariable Long id, @RequestBody Map<String, Integer> request) {
         try {
-            int days = request.getOrDefault("days", 7);
+            int days = request.getOrDefault("days", 2);
             return ResponseEntity.ok(gemstoneService.activatePremiumBoost(id, days));
         } catch (RuntimeException e) {
             Map<String, String> error = new HashMap<>();

@@ -59,8 +59,10 @@ public class GemstoneService {
     public Gemstone activatePremiumBoost(Long id, int days) {
         Gemstone gemstone = gemstoneRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Gemstone not found"));
+
+        int effectiveDays = Math.max(2, days);
         gemstone.setIsPremiumBoosted(true);
-        gemstone.setPremiumBoostExpiresAt(LocalDateTime.now().plusDays(days));
+        gemstone.setPremiumBoostExpiresAt(LocalDateTime.now().plusDays(effectiveDays));
         return gemstoneRepository.save(gemstone);
     }
 

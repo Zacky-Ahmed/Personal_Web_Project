@@ -253,7 +253,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Add hover effects for interactive elements
-    const interactiveElements = document.querySelectorAll('button, a, .feature-card, .workflow-step, .testimonial-card, .plan-card, .featured-card');
+    const interactiveElements = document.querySelectorAll('button, a, .feature-card, .workflow-step, .testimonial-card, .featured-card');
     interactiveElements.forEach(element => {
         element.addEventListener('mouseenter', function() {
             this.style.transition = 'all 0.2s ease';

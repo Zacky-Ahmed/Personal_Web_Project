@@ -409,7 +409,6 @@
                                 <th>User ID</th>
                                 <th>Address</th>
                                 <th>Status</th>
-                                <th>Plan</th>
                                 <th>Created At</th>
                                 <th>Actions</th>
                             </tr>
@@ -659,7 +658,6 @@
                             <td>${seller.userId || 'N/A'}</td>
                             <td>${seller.address || 'N/A'}</td>
                             <td><span class="status-badge ${seller.verificationStatus === 'APPROVED' ? 'status-active' : seller.verificationStatus === 'REJECTED' ? 'status-sold' : 'status-inactive'}">${seller.verificationStatus || 'PENDING'}</span></td>
-                            <td>${seller.subscriptionPlan || 'N/A'}</td>
                             <td>${seller.createdAt ? new Date(seller.createdAt).toLocaleDateString() : 'N/A'}</td>
                             <td>
                                 <button class="btn-admin btn-admin-danger" onclick="deleteSeller(${seller.id})">Delete</button>

@@ -86,10 +86,5 @@ public class HomeController {
     public String sellerDashboard() {
         return "seller-dashboard";
     }
-
-    @GetMapping("/payment.html")
-    public String payment() {
-        return "payment";
-    }
 }
 

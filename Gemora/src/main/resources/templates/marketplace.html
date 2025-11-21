@@ -64,6 +64,31 @@
         </div>
     </section>
 
+    <!-- Boosted Banner Placement -->
+    <section class="boost-banner-section">
+        <div class="container">
+            <div id="boostBanner" class="boost-banner" style="display: none;">
+                <div class="boost-banner-info">
+                    <p class="boost-banner-label">Promoted Listing</p>
+                    <h3 id="boostBannerTitle">Featured Gemstone</h3>
+                    <p id="boostBannerDesc" class="boost-banner-desc">Boosted listings are highlighted as banner-style ads for buyers actively browsing.</p>
+                    <div class="boost-banner-meta">
+                        <span id="boostBannerPrice">—</span>
+                        <span id="boostBannerLocation">—</span>
+                        <span id="boostBannerTimer">48h placement</span>
+                    </div>
+                    <div>
+                        <a id="boostBannerLink" class="btn-outline-white" href="marketplace.html">View Listing</a>
+                    </div>
+                </div>
+                <div class="boost-banner-media" id="boostBannerMedia"></div>
+            </div>
+            <div id="boostBannerEmpty" class="boost-banner-empty" style="display: none;">
+                No promoted listings are live right now. Check back soon for exclusive drops.
+            </div>
+        </div>
+    </section>
+
     <!-- Filters -->
     <section style="padding: 40px 0; border-bottom: 1px solid var(--border-color);">
         <div class="container">
@@ -380,6 +405,69 @@
     </footer>
 
     <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const banner = document.getElementById('boostBanner');
+            const bannerEmpty = document.getElementById('boostBannerEmpty');
+            const bannerTitle = document.getElementById('boostBannerTitle');
+            const bannerDesc = document.getElementById('boostBannerDesc');
+            const bannerPrice = document.getElementById('boostBannerPrice');
+            const bannerLocation = document.getElementById('boostBannerLocation');
+            const bannerTimer = document.getElementById('boostBannerTimer');
+            const bannerLink = document.getElementById('boostBannerLink');
+            const bannerMedia = document.getElementById('boostBannerMedia');
+
+            fetch('/api/gemstones/premium')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to load boosted listings');
+                    }
+                    return response.json();
+                })
+                .then(gemstones => {
+                    const now = new Date();
+                    const boosted = gemstones
+                        .filter(gem => gem.isPremiumBoosted && (!gem.premiumBoostExpiresAt || new Date(gem.premiumBoostExpiresAt) > now))
+                        .sort((a, b) => {
+                            const aDate = a.premiumBoostExpiresAt ? new Date(a.premiumBoostExpiresAt) : now;
+                            const bDate = b.premiumBoostExpiresAt ? new Date(b.premiumBoostExpiresAt) : now;
+                            return aDate - bDate;
+                        })[0];
+
+                    if (!boosted) {
+                        bannerEmpty.style.display = 'block';
+                        return;
+                    }
+
+                    bannerTitle.textContent = boosted.name || 'Promoted gemstone';
+                    bannerDesc.textContent = boosted.description || 'Exclusive gemstone promoted by a verified seller.';
+                    bannerPrice.textContent = boosted.price
+                        ? `LKR ${Number(boosted.price).toLocaleString('en-LK')}`
+                        : 'Price on request';
+                    bannerLocation.textContent = boosted.origin ? `Origin · ${boosted.origin}` : 'Origin · Sri Lanka';
+
+                    if (boosted.premiumBoostExpiresAt) {
+                        const expires = new Date(boosted.premiumBoostExpiresAt);
+                        bannerTimer.textContent = `Ends ${expires.toLocaleString()}`;
+                    } else {
+                        bannerTimer.textContent = 'Active boost · 48h placement';
+                    }
+
+                    if (bannerLink) {
+                        bannerLink.href = boosted.id ? `product-view.html?id=${boosted.id}` : 'product-view.html';
+                    }
+
+                    if (bannerMedia) {
+                        bannerMedia.style.backgroundImage = `url('${boosted.imageUrl || 'images/gems/gem-01.jpg'}')`;
+                    }
+
+                    banner.style.display = 'flex';
+                })
+                .catch(() => {
+                    bannerEmpty.style.display = 'block';
+                });
+        });
+    </script>
 </body>
 </html>
 

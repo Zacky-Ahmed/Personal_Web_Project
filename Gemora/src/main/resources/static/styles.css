@@ -54,6 +54,10 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+.hidden {
+    display: none !important;
+}
+
 .container {
     max-width: 1280px;
     margin: 0 auto;
@@ -765,11 +769,269 @@ body {
     letter-spacing: 1px;
 }
 
+.boost-info-card {
+    margin: 32px 0 40px;
+    padding: 32px;
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--border-color);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(236, 72, 153, 0.08) 100%);
+    display: flex;
+    justify-content: space-between;
+    gap: 32px;
+    flex-wrap: wrap;
+}
+
+.boost-info-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--primary-light);
+    margin-bottom: 8px;
+}
+
+.boost-info-card h3 {
+    font-size: 24px;
+    margin-bottom: 12px;
+}
+
+.boost-info-card p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.boost-info-points {
+    margin-top: 16px;
+    padding-left: 18px;
+    color: var(--text-secondary);
+    display: grid;
+    gap: 6px;
+}
+
+.boost-info-meta {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+    flex-wrap: wrap;
+    text-align: center;
+}
+
+.boost-meta-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 4px;
+}
+
+.boost-info-meta span {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-tertiary);
+}
+
+
 /* Listings */
 .listings {
     padding: 120px 0;
     background: var(--bg-secondary);
 }
+
+.boost-banner-section {
+    background: var(--bg-secondary);
+    padding-bottom: 20px;
+}
+
+.boost-banner {
+    display: flex;
+    border-radius: var(--radius-xxl);
+    background: linear-gradient(120deg, #1f2937 0%, #0f172a 100%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+    box-shadow: var(--shadow-xl);
+}
+
+.boost-banner-info {
+    flex: 1;
+    padding: 32px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.boost-banner-label {
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.boost-banner-info h3 {
+    font-size: 28px;
+    line-height: 1.3;
+}
+
+.boost-banner-desc {
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.6;
+}
+
+.boost-banner-meta {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.boost-banner-meta span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.boost-banner-media {
+    width: 320px;
+    min-height: 240px;
+    background-size: cover;
+    background-position: center;
+}
+
+.boost-banner-empty {
+    text-align: center;
+    color: var(--text-secondary);
+    padding: 40px 0;
+    font-size: 14px;
+}
+
+.boost-modal {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1200;
+}
+
+.boost-modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 10, 15, 0.65);
+    backdrop-filter: blur(6px);
+}
+
+.boost-modal-panel {
+    position: relative;
+    width: min(440px, 90vw);
+    background: var(--bg-primary);
+    border-radius: var(--radius-xxl);
+    padding: 32px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-xl);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    z-index: 1;
+}
+
+.boost-modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border-color);
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+}
+
+.boost-modal-panel h3 {
+    font-size: 24px;
+}
+
+.boost-modal-panel p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.boost-modal-input {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.boost-modal-input label {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.boost-modal-input input {
+    width: 140px;
+    padding: 10px 14px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    background: transparent;
+    color: var(--text-primary);
+    font-size: 16px;
+}
+
+.boost-cost-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--border-color);
+    background: var(--bg-card);
+}
+
+.boost-cost-summary span {
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    color: var(--text-tertiary);
+}
+
+.boost-cost-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.boost-cost-note {
+    font-size: 13px;
+    color: var(--text-tertiary);
+}
+
+.boost-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.boost-modal-actions button {
+    padding: 12px 20px;
+    border-radius: var(--radius-lg);
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.boost-modal-actions .btn-cancel {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+}
+
+.boost-modal-actions .btn-primary {
+    background: var(--primary);
+    color: white;
+}
+
 
 .listings .section-header {
     display: flex;
@@ -921,6 +1183,15 @@ body {
     font-size: 12px;
     color: var(--text-tertiary);
     margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.boost-status {
+    color: var(--primary-light);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .listing-price {
@@ -1836,6 +2107,23 @@ body {
     
     .form-row {
         grid-template-columns: 1fr;
+    }
+    
+    .boost-banner {
+        flex-direction: column;
+    }
+    
+    .boost-banner-media {
+        width: 100%;
+        min-height: 200px;
+    }
+    
+    .boost-info-card {
+        flex-direction: column;
+    }
+    
+    .boost-info-meta {
+        justify-content: flex-start;
     }
 }
 
