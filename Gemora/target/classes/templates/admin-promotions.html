@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage Promotions | GemBro Admin</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+            background: var(--bg-secondary);
+        }
+        .admin-sidebar {
+            width: 260px;
+            background: var(--bg-primary);
+            border-right: 1px solid var(--border-color);
+            padding: 24px;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        .admin-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .admin-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .admin-nav-item {
+            margin-bottom: 8px;
+        }
+        .admin-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .admin-nav-link:hover {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+        .admin-nav-link.active {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+        }
+        .admin-main {
+            flex: 1;
+            margin-left: 260px;
+            padding: 32px;
+        }
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        .admin-title {
+            font-size: 30px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .admin-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .btn-admin {
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .btn-admin-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-admin-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+        .btn-admin-danger {
+            background: #ef4444;
+            color: white;
+        }
+        .admin-section {
+            background: var(--bg-primary);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            padding: 28px;
+            margin-bottom: 24px;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 24px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+        .section-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .section-description {
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+        .promotion-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+        .promotion-card {
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 20px;
+            background: var(--bg-secondary);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .promotion-card.saving {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        .promotion-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .promotion-card h3 {
+            margin: 0;
+            font-size: 18px;
+            color: var(--text-primary);
+        }
+        .promotion-card p {
+            margin: 4px 0 0;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .form-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 12px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+        }
+        .promotion-preview {
+            border-radius: 12px;
+            padding: 16px;
+            background: var(--bg-primary);
+            border: 1px dashed var(--border-color);
+            font-size: 13px;
+            line-height: 1.5;
+            color: var(--text-secondary);
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 42px;
+            height: 24px;
+        }
+        .switch input { display: none; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #d1d5db;
+            -webkit-transition: .2s;
+            transition: .2s;
+            border-radius: 24px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            -webkit-transition: .2s;
+            transition: .2s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: var(--primary);
+        }
+        input:checked + .slider:before {
+            transform: translateX(18px);
+        }
+        .promotion-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .status-pill {
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-active {
+            background: rgba(16, 185, 129, .15);
+            color: #047857;
+        }
+        .status-paused {
+            background: rgba(107, 114, 128, .15);
+            color: #374151;
+        }
+        .alert {
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+        .alert-success {
+            background: rgba(16, 185, 129, .15);
+            color: #047857;
+        }
+        .alert-error {
+            background: rgba(239, 68, 68, .15);
+            color: #b91c1c;
+        }
+        .hidden {
+            display: none;
+        }
+        .loading {
+            text-align: center;
+            color: var(--text-secondary);
+            padding: 32px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <div class="logo-icon">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16 2L6 10L16 30L26 10L16 2Z" fill="url(#adminPromoGradient)"/>
+                        <defs>
+                            <linearGradient id="adminPromoGradient" x1="16" y1="2" x2="16" y2="30" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#6366f1"/>
+                                <stop offset="50%" stop-color="#8b5cf6"/>
+                                <stop offset="100%" stop-color="#ec4899"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <span class="logo-text">GemBro Admin</span>
+            </div>
+            <nav>
+                <ul class="admin-nav">
+                    <li class="admin-nav-item">
+                        <a href="admin-dashboard.html" class="admin-nav-link">
+                            <span>📊</span> Overview
+                        </a>
+                    </li>
+                    <li class="admin-nav-item">
+                        <a href="admin-dashboard.html" class="admin-nav-link">
+                            <span>👥</span> Users
+                        </a>
+                    </li>
+                    <li class="admin-nav-item">
+                        <a href="admin-dashboard.html" class="admin-nav-link">
+                            <span>🏪</span> Sellers
+                        </a>
+                    </li>
+                    <li class="admin-nav-item">
+                        <a href="admin-dashboard.html" class="admin-nav-link">
+                            <span>💎</span> Gemstones
+                        </a>
+                    </li>
+                    <li class="admin-nav-item">
+                        <a href="admin-dashboard.html" class="admin-nav-link">
+                            <span>📧</span> Messages
+                        </a>
+                    </li>
+                    <li class="admin-nav-item">
+                        <a href="admin-promotions.html" class="admin-nav-link active">
+                            <span>🚀</span> Promotions
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border-color);">
+                <a href="index.html" class="btn-ghost" style="width: 100%; text-align: center; display: block;">← Back to Site</a>
+            </div>
+        </aside>
+
+        <main class="admin-main">
+            <div class="admin-header">
+                <h1 class="admin-title">Homepage Promotions</h1>
+                <div class="admin-actions">
+                    <a href="index.html" target="_blank" class="btn-admin btn-admin-secondary">View Homepage</a>
+                    <button class="btn-admin btn-admin-danger" onclick="logout()">Logout</button>
+                </div>
+            </div>
+
+            <section class="admin-section">
+                <div class="section-header">
+                    <div>
+                        <h2 class="section-title">Control hero highlights & featured cards</h2>
+                        <p class="section-description">Assign any approved gemstone to the hero spotlight or featured slots. Add custom copy, Sri Lankan price overrides, and pin premium badges before they appear on the public homepage.</p>
+                    </div>
+                    <div>
+                        <button class="btn-admin btn-admin-secondary" onclick="refreshPromotions()">Refresh Data</button>
+                    </div>
+                </div>
+                <div class="alert hidden" id="globalMessage"></div>
+                <div id="loadingState" class="loading">Loading gemstones and promotions...</div>
+                <div id="promotionsContainer" class="promotion-grid hidden"></div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        const slotConfig = [
+            { key: 'HERO_PRIMARY', label: 'Hero Spotlight #1', description: 'Primary hero card beside the CTA. Ideal for your hottest drop.' },
+            { key: 'HERO_SECONDARY', label: 'Hero Spotlight #2', description: 'Secondary hero placement under the CTA copy.' },
+            { key: 'FEATURED_ONE', label: 'Featured Card #1', description: 'Top slot inside the Premium Gems carousel.' },
+            { key: 'FEATURED_TWO', label: 'Featured Card #2', description: 'Middle slot inside the Premium Gems carousel.' },
+            { key: 'FEATURED_THREE', label: 'Featured Card #3', description: 'Final slot inside the Premium Gems carousel.' }
+        ];
+
+        const badgeStyles = [
+            { value: '', label: 'Default' },
+            { value: 'emerald', label: 'Emerald (green)' },
+            { value: 'cyan', label: 'Cyan' },
+            { value: 'rose', label: 'Rose' },
+            { value: 'purple', label: 'Purple' },
+            { value: 'emerald-gradient', label: 'Emerald gradient (featured only)' },
+            { value: 'rose-gradient', label: 'Rose gradient (featured only)' },
+            { value: 'purple-gradient', label: 'Purple gradient (featured only)' }
+        ];
+
+        let gemstones = [];
+        let promotions = new Map();
+        const currencyFormatter = new Intl.NumberFormat('en-LK', { style: 'currency', currency: 'LKR', maximumFractionDigits: 0 });
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!checkAdminAuth()) {
+                return;
+            }
+            await bootstrapPromotionsPage();
+        });
+
+        async function bootstrapPromotionsPage() {
+            toggleLoading(true);
+            try {
+                const [gemstoneResponse, promotionResponse] = await Promise.all([
+                    fetch('/api/gemstones?status=active'),
+                    fetch('/api/homepage/promotions')
+                ]);
+                gemstones = await gemstoneResponse.json();
+                const promoList = await promotionResponse.json();
+                promotions = new Map(promoList.map(p => [p.slot, p]));
+                renderPromotionCards();
+                showMessage('Promotions synced with database.', false);
+            } catch (error) {
+                showMessage('Unable to load data. Please refresh and try again.', true);
+                console.error('Error loading promotions', error);
+            } finally {
+                toggleLoading(false);
+            }
+        }
+
+        function toggleLoading(isLoading) {
+            document.getElementById('loadingState').classList.toggle('hidden', !isLoading);
+            document.getElementById('promotionsContainer').classList.toggle('hidden', isLoading);
+        }
+
+        function renderPromotionCards() {
+            const container = document.getElementById('promotionsContainer');
+            container.innerHTML = slotConfig.map(slot => buildPromotionCard(slot, promotions.get(slot.key))).join('');
+            slotConfig.forEach(slot => {
+                const card = document.querySelector(`[data-slot="${slot.key}"]`);
+                if (!card) return;
+                const select = card.querySelector('select[data-field="gemstoneId"]');
+                const badgeSelect = card.querySelector('select[data-field="badgeStyle"]');
+                fillGemstoneOptions(select, promotions.get(slot.key)?.gemstoneId);
+                fillBadgeOptions(badgeSelect, promotions.get(slot.key)?.badgeStyle);
+                updatePreview(slot.key);
+                select.addEventListener('change', () => updatePreview(slot.key));
+            });
+        }
+
+        function buildPromotionCard(slot, promotion) {
+            const active = promotion ? promotion.active !== false : true;
+            return `
+                <div class="promotion-card" data-slot="${slot.key}">
+                    <div class="promotion-card-header">
+                        <div>
+                            <h3>${slot.label}</h3>
+                            <p>${slot.description}</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" data-field="active" ${active ? 'checked' : ''}>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Select Gemstone</label>
+                        <select data-field="gemstoneId"></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Badge Label</label>
+                        <input type="text" data-field="badgeLabel" placeholder="e.g. Featured listing" value="${escapeHtml(promotion?.badgeLabel) || ''}">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Badge Style</label>
+                            <select data-field="badgeStyle"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Custom Price Text</label>
+                            <input type="text" data-field="priceText" placeholder="e.g. LKR 3.2M" value="${escapeHtml(promotion?.priceText) || ''}">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Headline</label>
+                        <input type="text" data-field="title" placeholder="Falls back to gemstone name" value="${escapeHtml(promotion?.title) || ''}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Subheadline / Location</label>
+                        <input type="text" data-field="subtitle" placeholder="e.g. Colombo, Sri Lanka" value="${escapeHtml(promotion?.subtitle) || ''}">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Footer Left</label>
+                            <input type="text" data-field="footnoteLeft" placeholder="Documents · GIA" value="${escapeHtml(promotion?.footnoteLeft) || ''}">
+                        </div>
+                        <div class="form-group">
+                            <label>Footer Right</label>
+                            <input type="text" data-field="footnoteRight" placeholder="Views · 2.3k" value="${escapeHtml(promotion?.footnoteRight) || ''}">
+                        </div>
+                    </div>
+
+                    <div class="promotion-preview" data-preview="${slot.key}">
+                        <p>Choose a gemstone to see a quick summary.</p>
+                    </div>
+
+                    <div class="promotion-footer">
+                        <span class="status-pill ${active ? 'status-active' : 'status-paused'}">
+                            ${active ? 'Active on homepage' : 'Paused'}
+                        </span>
+                        <button class="btn-admin btn-admin-primary" onclick="handleSave('${slot.key}')">Save slot</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function fillGemstoneOptions(select, selectedId) {
+            const options = ['<option value="">Select gemstone</option>']
+                .concat(gemstones.map(gem => {
+                    const label = `${gem.name} · ${gem.gemType || 'Unknown'} · ${formatCarat(gem.caratWeight)}`;
+                    return `<option value="${gem.id}" ${gem.id === selectedId ? 'selected' : ''}>${escapeHtml(label)}</option>`;
+                }));
+            select.innerHTML = options.join('');
+        }
+
+        function fillBadgeOptions(select, selectedValue) {
+            select.innerHTML = badgeStyles.map(style => `
+                <option value="${style.value}" ${style.value === (selectedValue || '') ? 'selected' : ''}>${style.label}</option>
+            `).join('');
+        }
+
+        function formatCarat(carat) {
+            if (!carat) return '—';
+            return `${carat} ct`;
+        }
+
+        function updatePreview(slotKey) {
+            const card = document.querySelector(`[data-slot="${slotKey}"]`);
+            if (!card) return;
+
+            const gemstoneId = Number(card.querySelector('select[data-field="gemstoneId"]').value);
+            const gemstone = gemstones.find(g => g.id === gemstoneId);
+            const preview = card.querySelector(`[data-preview="${slotKey}"]`);
+
+            if (!gemstone) {
+                preview.innerHTML = '<p>Select a gemstone to load its summary.</p>';
+                return;
+            }
+
+            preview.innerHTML = `
+                <strong>${escapeHtml(gemstone.name)}</strong><br>
+                ${escapeHtml(gemstone.gemType || 'Gemstone')} · ${formatCarat(gemstone.caratWeight)}<br>
+                Origin: ${escapeHtml(gemstone.origin || 'Sri Lanka')}<br>
+                Certification: ${escapeHtml(gemstone.certification || 'Pending')}<br>
+                Asking price: ${formatPrice(gemstone.price)}
+            `;
+        }
+
+        function formatPrice(value) {
+            if (value === null || value === undefined) {
+                return 'Price on request';
+            }
+            return currencyFormatter.format(value);
+        }
+
+        async function refreshPromotions() {
+            document.getElementById('globalMessage').classList.add('hidden');
+            await bootstrapPromotionsPage();
+        }
+
+        async function handleSave(slotKey) {
+            const card = document.querySelector(`[data-slot="${slotKey}"]`);
+            if (!card) return;
+
+            const gemstoneId = Number(card.querySelector('select[data-field="gemstoneId"]').value);
+            if (!gemstoneId) {
+                showMessage('Please select a gemstone before saving.', true);
+                return;
+            }
+
+            const payload = {
+                gemstoneId,
+                badgeLabel: getFieldValue(card, 'badgeLabel'),
+                badgeStyle: getFieldValue(card, 'badgeStyle'),
+                priceText: getFieldValue(card, 'priceText'),
+                title: getFieldValue(card, 'title'),
+                subtitle: getFieldValue(card, 'subtitle'),
+                footnoteLeft: getFieldValue(card, 'footnoteLeft'),
+                footnoteRight: getFieldValue(card, 'footnoteRight'),
+                active: card.querySelector('[data-field="active"]').checked
+            };
+
+            card.classList.add('saving');
+            try {
+                const response = await fetch(`/api/homepage/promotions/${slotKey}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!response.ok) {
+                    throw new Error('Request failed');
+                }
+                showMessage(`Slot ${slotKey.replace('_', ' ')} updated successfully.`, false);
+                await refreshPromotionCache();
+            } catch (error) {
+                console.error('Save failed', error);
+                showMessage('Unable to save promotion. Please try again.', true);
+            } finally {
+                card.classList.remove('saving');
+            }
+        }
+
+        async function refreshPromotionCache() {
+            try {
+                const resp = await fetch('/api/homepage/promotions');
+                const data = await resp.json();
+                promotions = new Map(data.map(p => [p.slot, p]));
+                renderPromotionCards();
+            } catch (error) {
+                console.error('Failed to refresh cache', error);
+            }
+        }
+
+        function getFieldValue(card, field) {
+            const el = card.querySelector(`[data-field="${field}"]`);
+            if (!el) return null;
+            return el.value ? el.value.trim() : null;
+        }
+
+        function showMessage(message, isError) {
+            const banner = document.getElementById('globalMessage');
+            banner.textContent = message;
+            banner.className = `alert ${isError ? 'alert-error' : 'alert-success'}`;
+            banner.classList.remove('hidden');
+            setTimeout(() => banner.classList.add('hidden'), 4000);
+        }
+
+        function escapeHtml(value) {
+            if (!value) return '';
+            return value.replace(/[&<>"']/g, function (char) {
+                const entities = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+                return entities[char] || char;
+            });
+        }
+
+        function checkAdminAuth() {
+            if (sessionStorage.getItem('adminAuthenticated') !== 'true') {
+                window.location.href = 'admin-login.html';
+                return false;
+            }
+            return true;
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                sessionStorage.removeItem('adminAuthenticated');
+                sessionStorage.removeItem('adminEmail');
+                window.location.href = 'admin-login.html';
+            }
+        }
+    </script>
+</body>
+</html>
+

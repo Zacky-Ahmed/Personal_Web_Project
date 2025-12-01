@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Marketplace | GemBro</title>
+    <meta name="description" content="Browse certified gemstones from verified sellers on GemBro.">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <div class="logo-icon">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16 2L6 10L16 30L26 10L16 2Z" fill="url(#marketplaceLogoGradient)"/>
+                        <path d="M16 2L10 8L16 14L22 8L16 2Z" fill="url(#marketplaceLogoGradient2)"/>
+                        <defs>
+                            <linearGradient id="marketplaceLogoGradient" x1="16" y1="2" x2="16" y2="30" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#6366f1"/>
+                                <stop offset="50%" stop-color="#8b5cf6"/>
+                                <stop offset="100%" stop-color="#ec4899"/>
+                            </linearGradient>
+                            <linearGradient id="marketplaceLogoGradient2" x1="16" y1="2" x2="16" y2="14" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#ffffff" stop-opacity="0.3"/>
+                                <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <span class="logo-text">GemBro</span>
+            </a>
+            <div class="nav-menu" id="navMenu">
+                <a href="marketplace.html" class="nav-link">Marketplace</a>
+                <a href="index.html#workflow" class="nav-link">How It Works</a>
+                <a href="index.html#testimonials" class="nav-link">Reviews</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+            </div>
+            <div class="nav-actions">
+                <a href="signup.html" class="btn-ghost">Sign Up</a>
+                <a href="login.html" class="btn-ghost">Sign In</a>
+                <a href="seller.html" class="btn-gradient">Become Seller</a>
+            </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Marketplace Hero -->
+    <section class="seller-hero" style="min-height: 50vh; padding: 100px 0 60px;">
+        <div class="seller-hero-bg">
+            <div class="gradient-orb orb-1"></div>
+            <div class="gradient-orb orb-2"></div>
+        </div>
+        <div class="container">
+            <div class="seller-hero-content">
+                <h1 class="seller-title">Browse Marketplace</h1>
+                <p class="seller-subtitle">Discover certified Sri Lankan gemstones priced transparently in LKR.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Boosted Banner Placement -->
+    <section class="boost-banner-section">
+        <div class="container">
+            <div id="boostBanner" class="boost-banner" style="display: none;">
+                <div class="boost-banner-info">
+                    <p class="boost-banner-label">Promoted Listing</p>
+                    <h3 id="boostBannerTitle">Featured Gemstone</h3>
+                    <p id="boostBannerDesc" class="boost-banner-desc">Boosted listings are highlighted as banner-style ads for buyers actively browsing.</p>
+                    <div class="boost-banner-meta">
+                        <span id="boostBannerPrice">—</span>
+                        <span id="boostBannerLocation">—</span>
+                        <span id="boostBannerTimer">48h placement</span>
+                    </div>
+                    <div>
+                        <a id="boostBannerLink" class="btn-outline-white" href="marketplace.html">View Listing</a>
+                    </div>
+                </div>
+                <div class="boost-banner-media" id="boostBannerMedia"></div>
+            </div>
+            <div id="boostBannerEmpty" class="boost-banner-empty" style="display: none;">
+                No promoted listings are live right now. Check back soon for exclusive drops.
+            </div>
+        </div>
+    </section>
+
+    <!-- Filters -->
+    <section style="padding: 40px 0; border-bottom: 1px solid var(--border-color);">
+        <div class="container">
+            <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
+                <select class="form-input" style="width: auto; min-width: 150px;">
+                    <option>All Categories</option>
+                    <option>Sapphire</option>
+                    <option>Ruby</option>
+                    <option>Emerald</option>
+                    <option>Alexandrite</option>
+                </select>
+                <select class="form-input" style="width: auto; min-width: 150px;">
+                    <option>All Origins</option>
+                    <option>Sri Lanka</option>
+                    <option>Myanmar</option>
+                    <option>Colombia</option>
+                    <option>Other</option>
+                </select>
+                <select class="form-input" style="width: auto; min-width: 150px;">
+                    <option>Price Range</option>
+                    <option>Under LKR 1M</option>
+                    <option>LKR 1M - 3M</option>
+                    <option>LKR 3M - 6M</option>
+                    <option>Above LKR 6M</option>
+                </select>
+                <input type="text" class="form-input" placeholder="Search gems..." style="flex: 1; min-width: 200px;">
+                <button class="btn-gradient">Search</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Listings Grid -->
+    <section class="listings" style="padding: 80px 0;">
+        <div class="container">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 48px;">
+                <h2 style="font-size: 32px; font-weight: 700;">Featured Listings</h2>
+                <p style="color: var(--text-secondary);">Showing 12 of 3,600+ gems</p>
+            </div>
+            <div class="listings-grid">
+                <!-- Listing Card 1 -->
+                <div class="listing-card">
+                    <div class="listing-image-container">
+                        <div class="listing-image" style="background-image: url('images/gems/gem-01.jpg');"></div>
+                        <div class="listing-badge premium">Featured</div>
+                    </div>
+                    <div class="listing-content">
+                        <div class="seller-type">Premium Seller</div>
+                        <h3 class="listing-title">Untreated Cornflower Sapphire</h3>
+                        <p class="listing-specs">3.2ct · Colombo, Sri Lanka</p>
+                        <div class="gem-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Cut:</span>
+                                <span class="detail-value">Oval Brilliant</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Color:</span>
+                                <span class="detail-value">Cornflower Blue</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Clarity:</span>
+                                <span class="detail-value">VVS1</span>
+                            </div>
+                        </div>
+                        <div class="listing-meta">
+                            <div class="listing-info">
+                                <span>GIA Certified</span>
+                                <span>2.3k views</span>
+                            </div>
+                            <div class="listing-price">LKR 3.2M</div>
+                        </div>
+                        <a href="product-view.html?product=gem-01" class="btn-card">View</a>
+                    </div>
+                </div>
+
+                <!-- Listing Card 2 -->
+                <div class="listing-card featured">
+                    <div class="listing-image-container">
+                        <div class="listing-image" style="background-image: url('images/gems/gem-02.jpg');"></div>
+                        <div class="listing-badge spotlight">Homepage Spotlight</div>
+                    </div>
+                    <div class="listing-content">
+                        <div class="seller-type">Premium Seller</div>
+                        <h3 class="listing-title">Pigeon Blood Ruby Suite</h3>
+                        <p class="listing-specs">2.1ct · Ratnapura, Sri Lanka</p>
+                        <div class="gem-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Cut:</span>
+                                <span class="detail-value">Cushion</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Color:</span>
+                                <span class="detail-value">Pigeon Blood Red</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Clarity:</span>
+                                <span class="detail-value">VS1</span>
+                            </div>
+                        </div>
+                        <div class="listing-meta">
+                            <div class="listing-info">
+                                <span>GIA Certified</span>
+                                <span>1.8k views</span>
+                            </div>
+                            <div class="listing-price">LKR 2.2M</div>
+                        </div>
+                        <a href="product-view.html?product=gem-02" class="btn-card">View</a>
+                    </div>
+                </div>
+
+                <!-- Listing Card 3 -->
+                <div class="listing-card">
+                    <div class="listing-image-container">
+                        <div class="listing-image" style="background-image: url('images/gems/gem-03.jpg');"></div>
+                        <div class="listing-badge certified">GemLab Certified</div>
+                    </div>
+                    <div class="listing-content">
+                        <div class="seller-type">Free Launch Seller</div>
+                        <h3 class="listing-title">Alexandrite Colour Change</h3>
+                        <p class="listing-specs">1.6ct · Galle, Sri Lanka</p>
+                        <div class="gem-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Cut:</span>
+                                <span class="detail-value">Round Brilliant</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Color:</span>
+                                <span class="detail-value">Color Change</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Clarity:</span>
+                                <span class="detail-value">VS2</span>
+                            </div>
+                        </div>
+                        <div class="listing-meta">
+                            <div class="listing-info">
+                                <span>GIA Certified</span>
+                                <span>950 views</span>
+                            </div>
+                            <div class="listing-price">LKR 1.4M</div>
+                        </div>
+                        <a href="product-view.html?product=gem-03" class="btn-card">View</a>
+                    </div>
+                </div>
+
+                <!-- Listing Card 4 -->
+                <div class="listing-card">
+                    <div class="listing-image-container">
+                        <div class="listing-image" style="background-image: url('images/gems/gem-04.jpg');"></div>
+                        <div class="listing-badge premium">Featured</div>
+                    </div>
+                    <div class="listing-content">
+                        <div class="seller-type">Premium Seller</div>
+                        <h3 class="listing-title">Ceylon Blue Sapphire</h3>
+                        <p class="listing-specs">4.8ct · Colombo, Sri Lanka</p>
+                        <div class="gem-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Cut:</span>
+                                <span class="detail-value">Emerald Cut</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Color:</span>
+                                <span class="detail-value">Royal Blue</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Clarity:</span>
+                                <span class="detail-value">VVS2</span>
+                            </div>
+                        </div>
+                        <div class="listing-meta">
+                            <div class="listing-info">
+                                <span>GIA Certified</span>
+                                <span>3.1k views</span>
+                            </div>
+                            <div class="listing-price">LKR 4.2M</div>
+                        </div>
+                        <a href="product-view.html?product=gem-04" class="btn-card">View</a>
+                    </div>
+                </div>
+
+                <!-- Listing Card 5 -->
+                <div class="listing-card">
+                    <div class="listing-image-container">
+                        <div class="listing-image" style="background-image: url('images/gems/gem-05.jpg');"></div>
+                        <div class="listing-badge certified">Certified</div>
+                    </div>
+                    <div class="listing-content">
+                        <div class="seller-type">Premium Seller</div>
+                        <h3 class="listing-title">Imperial Ruby Cluster</h3>
+                        <p class="listing-specs">2.3ct · Ratnapura, Sri Lanka</p>
+                        <div class="gem-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Cut:</span>
+                                <span class="detail-value">Princess</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Color:</span>
+                                <span class="detail-value">Deep Red</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Clarity:</span>
+                                <span class="detail-value">VS1</span>
+                            </div>
+                        </div>
+                        <div class="listing-meta">
+                            <div class="listing-info">
+                                <span>GIA Certified</span>
+                                <span>1.2k views</span>
+                            </div>
+                            <div class="listing-price">LKR 2.7M</div>
+                        </div>
+                        <a href="product-view.html?product=gem-05" class="btn-card">View</a>
+                    </div>
+                </div>
+
+                <!-- Listing Card 6 -->
+                <div class="listing-card">
+                    <div class="listing-image-container">
+                        <div class="listing-image" style="background-image: url('images/gems/gem-06.jpg');"></div>
+                        <div class="listing-badge premium">New Arrival</div>
+                    </div>
+                    <div class="listing-content">
+                        <div class="seller-type">Premium Seller</div>
+                        <h3 class="listing-title">Padparadscha Sapphire</h3>
+                        <p class="listing-specs">2.5ct · Ratnapura, Sri Lanka</p>
+                        <div class="gem-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Cut:</span>
+                                <span class="detail-value">Oval</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Color:</span>
+                                <span class="detail-value">Sunset Pink-Orange</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Clarity:</span>
+                                <span class="detail-value">VVS1</span>
+                            </div>
+                        </div>
+                        <div class="listing-meta">
+                            <div class="listing-info">
+                                <span>GIA Certified</span>
+                                <span>890 views</span>
+                            </div>
+                            <div class="listing-price">LKR 2.8M</div>
+                        </div>
+                        <a href="product-view.html?product=gem-06" class="btn-card">View</a>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 48px;">
+                <button class="btn-outline-large">Load More Listings</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <div class="logo-icon">
+                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M16 2L6 10L16 30L26 10L16 2Z" fill="url(#marketplaceFooterLogoGradient)"/>
+                                <path d="M16 2L10 8L16 14L22 8L16 2Z" fill="url(#marketplaceFooterLogoGradient2)"/>
+                                <defs>
+                                    <linearGradient id="marketplaceFooterLogoGradient" x1="16" y1="2" x2="16" y2="30" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0%" stop-color="#6366f1"/>
+                                        <stop offset="50%" stop-color="#8b5cf6"/>
+                                        <stop offset="100%" stop-color="#ec4899"/>
+                                    </linearGradient>
+                                    <linearGradient id="marketplaceFooterLogoGradient2" x1="16" y1="2" x2="16" y2="14" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0%" stop-color="#ffffff" stop-opacity="0.3"/>
+                                        <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <span class="logo-text">GemBro</span>
+                    </div>
+                    <p class="footer-description">Connecting gem experts with global buyers through authenticity, transparency, and premium support.</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Company</h4>
+                        <a href="about.html">About</a>
+                        <a href="#">Privacy Policy</a>
+                        <a href="#">Terms of Service</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Resources</h4>
+                        <a href="#">Seller Handbook</a>
+                        <a href="contact.html">Support</a>
+                        <a href="#">Documentation</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Contact</h4>
+                        <a href="mailto:hello@gemmarket.app">hello@gemmarket.app</a>
+                        <a href="tel:+94771234567">+94 77 123 4567</a>
+                    </div>
+                </div>
+                <div class="footer-newsletter">
+                    <h4>Stay Updated</h4>
+                    <div class="newsletter-form">
+                        <input type="email" placeholder="Enter your email" class="newsletter-input">
+                        <button class="newsletter-btn">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; <span id="currentYear"></span> GemBro. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const banner = document.getElementById('boostBanner');
+            const bannerEmpty = document.getElementById('boostBannerEmpty');
+            const bannerTitle = document.getElementById('boostBannerTitle');
+            const bannerDesc = document.getElementById('boostBannerDesc');
+            const bannerPrice = document.getElementById('boostBannerPrice');
+            const bannerLocation = document.getElementById('boostBannerLocation');
+            const bannerTimer = document.getElementById('boostBannerTimer');
+            const bannerLink = document.getElementById('boostBannerLink');
+            const bannerMedia = document.getElementById('boostBannerMedia');
+
+            fetch('/api/gemstones/premium')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to load boosted listings');
+                    }
+                    return response.json();
+                })
+                .then(gemstones => {
+                    const now = new Date();
+                    const boosted = gemstones
+                        .filter(gem => gem.isPremiumBoosted && (!gem.premiumBoostExpiresAt || new Date(gem.premiumBoostExpiresAt) > now))
+                        .sort((a, b) => {
+                            const aDate = a.premiumBoostExpiresAt ? new Date(a.premiumBoostExpiresAt) : now;
+                            const bDate = b.premiumBoostExpiresAt ? new Date(b.premiumBoostExpiresAt) : now;
+                            return aDate - bDate;
+                        })[0];
+
+                    if (!boosted) {
+                        bannerEmpty.style.display = 'block';
+                        return;
+                    }
+
+                    bannerTitle.textContent = boosted.name || 'Promoted gemstone';
+                    bannerDesc.textContent = boosted.description || 'Exclusive gemstone promoted by a verified seller.';
+                    bannerPrice.textContent = boosted.price
+                        ? `LKR ${Number(boosted.price).toLocaleString('en-LK')}`
+                        : 'Price on request';
+                    bannerLocation.textContent = boosted.origin ? `Origin · ${boosted.origin}` : 'Origin · Sri Lanka';
+
+                    if (boosted.premiumBoostExpiresAt) {
+                        const expires = new Date(boosted.premiumBoostExpiresAt);
+                        bannerTimer.textContent = `Ends ${expires.toLocaleString()}`;
+                    } else {
+                        bannerTimer.textContent = 'Active boost · 48h placement';
+                    }
+
+                    if (bannerLink) {
+                        bannerLink.href = boosted.id ? `product-view.html?id=${boosted.id}` : 'product-view.html';
+                    }
+
+                    if (bannerMedia) {
+                        bannerMedia.style.backgroundImage = `url('${boosted.imageUrl || 'images/gems/gem-01.jpg'}')`;
+                    }
+
+                    banner.style.display = 'flex';
+                })
+                .catch(() => {
+                    bannerEmpty.style.display = 'block';
+                });
+        });
+    </script>
+</body>
+</html>
+
+

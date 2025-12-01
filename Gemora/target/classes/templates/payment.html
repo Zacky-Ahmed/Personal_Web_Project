@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boost Payment | GemBro</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <span class="logo-text">GemBro</span>
+            </a>
+        </div>
+    </nav>
+
+    <section style="padding: 80px 0;">
+        <div class="container">
+            <div class="boost-modal-panel" style="margin: 0 auto; max-width: 480px;">
+                <p class="boost-info-label">Boost payment</p>
+                <h3>Confirm your purchase</h3>
+                <p id="boostSummaryText">Loading boost details...</p>
+
+                <div class="boost-cost-summary" style="margin-top: 16px;">
+                    <div>
+                        <span>Estimated cost</span>
+                        <p id="paymentCostDisplay" class="boost-cost-value">$0.00</p>
+                    </div>
+                    <p id="paymentCostNote" class="boost-cost-note"></p>
+                </div>
+
+                <div class="boost-modal-actions" style="margin-top: 24px;">
+                    <button class="btn-cancel" type="button" onclick="window.history.back()">Cancel</button>
+                    <button class="btn-primary" type="button" id="confirmPaymentButton">Confirm Payment</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        (function() {
+            const params = new URLSearchParams(window.location.search);
+            const gemId = params.get('gemId');
+            const days = parseInt(params.get('days') || '2', 10);
+            const cost = parseFloat(params.get('total') || '0.99');
+
+            const blocks = Math.ceil(days / 2);
+
+            const summaryEl = document.getElementById('boostSummaryText');
+            const costDisplay = document.getElementById('paymentCostDisplay');
+            const costNote = document.getElementById('paymentCostNote');
+            const confirmBtn = document.getElementById('confirmPaymentButton');
+
+            if (!gemId) {
+                summaryEl.textContent = 'Missing listing details. Please go back and try again.';
+                confirmBtn.disabled = true;
+                return;
+            }
+
+            summaryEl.textContent = `You are boosting listing #${gemId} for ${days} day${days > 1 ? 's' : ''}.`;
+            costDisplay.textContent = `$${cost.toFixed(2)}`;
+            costNote.textContent = `${blocks} × 2-day block${blocks > 1 ? 's' : ''} · ${days} day boost`;
+
+            confirmBtn.addEventListener('click', async () => {
+                confirmBtn.disabled = true;
+                confirmBtn.textContent = 'Processing...';
+
+                try {
+                    const response = await fetch(`/api/gemstones/${gemId}/premium-boost`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ days })
+                    });
+
+                    if (response.ok) {
+                        alert('Payment successful! Your boost is now active.');
+                        window.location.href = 'seller-dashboard.html';
+                    } else {
+                        const error = await response.json().catch(() => ({}));
+                        alert(error.error || 'Failed to activate boost. Please try again.');
+                        confirmBtn.disabled = false;
+                        confirmBtn.textContent = 'Confirm Payment';
+                    }
+                } catch (e) {
+                    console.error('Error during payment/boost:', e);
+                    alert('An error occurred while processing payment. Please try again.');
+                    confirmBtn.disabled = false;
+                    confirmBtn.textContent = 'Confirm Payment';
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
+
+

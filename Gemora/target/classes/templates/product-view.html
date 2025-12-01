@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gem Details | GemBro Marketplace</title>
+    <meta name="description" content="View detailed gemstone information, certificates, media and seller credibility on GemBro.">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <div class="logo-icon">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16 2L6 10L16 30L26 10L16 2Z" fill="url(#productLogoGradient)"/>
+                        <path d="M16 2L10 8L16 14L22 8L16 2Z" fill="url(#productLogoGradient2)"/>
+                        <defs>
+                            <linearGradient id="productLogoGradient" x1="16" y1="2" x2="16" y2="30" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#6366f1"/>
+                                <stop offset="50%" stop-color="#8b5cf6"/>
+                                <stop offset="100%" stop-color="#ec4899"/>
+                            </linearGradient>
+                            <linearGradient id="productLogoGradient2" x1="16" y1="2" x2="16" y2="14" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#ffffff" stop-opacity="0.3"/>
+                                <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <span class="logo-text">GemBro</span>
+            </a>
+            <div class="nav-menu" id="navMenu">
+                <a href="marketplace.html" class="nav-link">Marketplace</a>
+                <a href="index.html#workflow" class="nav-link">How It Works</a>
+                <a href="index.html#testimonials" class="nav-link">Reviews</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+            </div>
+            <div class="nav-actions">
+                <a href="signup.html" class="btn-ghost">Sign Up</a>
+                <a href="login.html" class="btn-ghost">Sign In</a>
+                <a href="seller.html" class="btn-gradient">Become Seller</a>
+            </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <section class="product-hero">
+        <div class="product-hero-bg">
+            <div class="gradient-orb orb-1"></div>
+            <div class="gradient-orb orb-2"></div>
+        </div>
+        <div class="container product-hero-grid">
+            <div class="product-media" id="productMedia"></div>
+            <div class="product-summary">
+                <div class="seller-type" id="productSellerTier">Premium Seller</div>
+                <h1 class="product-title" id="productTitle">Gem Title</h1>
+                <p class="product-subtitle" id="productSubtitle">Weight · Location</p>
+                <p class="product-description" id="productDescription">Description text</p>
+                <div class="product-price" id="productPrice">$0</div>
+                <div class="product-meta">
+                    <span id="productCertification">Certified</span>
+                    <span id="productViews">Views</span>
+                    <span id="productAvailability">Available</span>
+                </div>
+                <div class="product-actions">
+                    <button class="btn-gradient" onclick="handleContactSeller()">Contact Seller</button>
+                    <button id="boostListingButton" class="btn-outline-large" type="button" style="display: none;">Boost Listing</button>
+                    <a href="marketplace.html" class="btn-outline-large">Back to Marketplace</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="product-details-section">
+        <div class="container product-details-grid">
+            <div class="product-card">
+                <h3>Gem Specifications</h3>
+                <div class="spec-list" id="productSpecs"></div>
+            </div>
+            <div class="product-card">
+                <h3>Seller Assurance</h3>
+                <ul class="checklist" id="productHighlights"></ul>
+            </div>
+            <div class="product-card">
+                <h3>Authenticity & Certificates</h3>
+                <div id="productCertificates"></div>
+                <button class="btn-card" onclick="handleContactSeller()">Request Lab Report</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <div class="logo-icon">
+                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M16 2L6 10L16 30L26 10L16 2Z" fill="url(#productFooterLogoGradient)"/>
+                                <path d="M16 2L10 8L16 14L22 8L16 2Z" fill="url(#productFooterLogoGradient2)"/>
+                                <defs>
+                                    <linearGradient id="productFooterLogoGradient" x1="16" y1="2" x2="16" y2="30" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0%" stop-color="#6366f1"/>
+                                        <stop offset="50%" stop-color="#8b5cf6"/>
+                                        <stop offset="100%" stop-color="#ec4899"/>
+                                    </linearGradient>
+                                    <linearGradient id="productFooterLogoGradient2" x1="16" y1="2" x2="16" y2="14" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0%" stop-color="#ffffff" stop-opacity="0.3"/>
+                                        <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <span class="logo-text">GemBro</span>
+                    </div>
+                    <p class="footer-description">Connecting gem experts with global buyers through authenticity, transparency, and premium support.</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; <span id="currentYear"></span> GemBro. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        let productBoostGemstoneId = null;
+
+        const PRODUCTS = {
+            'gem-01': {
+                title: 'Untreated Cornflower Sapphire',
+                subtitle: '3.2ct · Colombo, Sri Lanka',
+                description: 'Cornflower blue sapphire with excellent luster, untreated and verified by GIA. Ideal for collectors seeking investment-grade gems.',
+                price: 'US$ 9,850',
+                certification: 'GIA Certificate #CEY-93281',
+                views: '2.3k views this month',
+                availability: 'Available · Insured shipping worldwide',
+                sellerTier: 'Premium Seller',
+                image: 'images/gems/gem-01.jpg',
+                specs: [
+                    { label: 'Cut', value: 'Oval Brilliant' },
+                    { label: 'Color', value: 'Cornflower Blue' },
+                    { label: 'Clarity', value: 'VVS1' },
+                    { label: 'Treatment', value: 'No heat' },
+                    { label: 'Dimensions', value: '8.1 x 6.4 x 4.8 mm' },
+                    { label: 'Certification', value: 'GIA & GemReg' }
+                ],
+                highlights: [
+                    'Insured global shipping & 5-day inspection period',
+                    'GemReg verified seller with premium response SLA',
+                    'Complimentary video-call viewing session',
+                    'Escrow and customs handling included'
+                ],
+                certificates: [
+                    'GIA Report: CEY-93281 · Issued 2024-02-11',
+                    'GemReg Compliance ID: GR-584211'
+                ]
+            },
+            'gem-02': {
+                title: 'Pigeon Blood Ruby Suite',
+                subtitle: '2.1ct · Ratnapura, Sri Lanka',
+                description: 'Matched ruby suite featuring deep saturation and balanced fluorescence, curated for bespoke high jewelry.',
+                price: 'US$ 6,500',
+                certification: 'GIA & GRS Certified',
+                views: '1.8k views',
+                availability: 'Available · Includes lab memo',
+                sellerTier: 'Growth Seller',
+                image: 'images/gems/gem-02.jpg',
+                specs: [
+                    { label: 'Cut', value: 'Cushion' },
+                    { label: 'Color', value: 'Pigeon Blood Red' },
+                    { label: 'Clarity', value: 'VS1' },
+                    { label: 'Treatment', value: 'Minor heat' },
+                    { label: 'Suite Size', value: 'Main 2.1ct + accents' }
+                ],
+                highlights: [
+                    'Pre-qualified buyer concierge support',
+                    '48-hour reservation option',
+                    'Private viewing lounge access'
+                ],
+                certificates: [
+                    'GIA Ruby Report: RBY-77218',
+                    'GRS Memo: GRS2024-1159'
+                ]
+            },
+            'gem-03': {
+                title: 'Alexandrite Colour Change',
+                subtitle: '1.6ct · Galle, Sri Lanka',
+                description: 'Dynamic alexandrite showcasing vivid teal-to-raspberry transitions under mixed lighting with crisp round faceting.',
+                price: 'US$ 4,300',
+                certification: 'GIA Certified',
+                views: '950 views',
+                availability: 'Available · Ships in 3 days',
+                sellerTier: 'Starter Seller',
+                image: 'images/gems/gem-03.jpg',
+                specs: [
+                    { label: 'Cut', value: 'Round Brilliant' },
+                    { label: 'Color Shift', value: 'Teal → Raspberry' },
+                    { label: 'Clarity', value: 'VS2' },
+                    { label: 'Treatment', value: 'Untreated' }
+                ],
+                highlights: [
+                    'True daylight to candlelight change',
+                    'Macro video + 360° spin available',
+                    'DHL Express with insurance'
+                ],
+                certificates: [
+                    'GIA Alexandrite Report: ALX-33121'
+                ]
+            },
+            'gem-04': {
+                title: 'Ceylon Blue Sapphire',
+                subtitle: '4.8ct · Colombo, Sri Lanka',
+                description: 'Royal blue sapphire sourced from Pelmadulla with exquisite emerald cut geometry and balanced tone.',
+                price: 'US$ 11,900',
+                certification: 'GIA & AGL Certified',
+                views: '3.1k views',
+                availability: 'Available · Concierge delivery in 72h',
+                sellerTier: 'Elite Trader',
+                image: 'images/gems/gem-04.jpg',
+                specs: [
+                    { label: 'Cut', value: 'Emerald Cut' },
+                    { label: 'Color', value: 'Royal Blue' },
+                    { label: 'Clarity', value: 'VVS2' },
+                    { label: 'Measurements', value: '10.2 x 7.4 x 5.1 mm' }
+                ],
+                highlights: [
+                    'High-jewelry readiness report included',
+                    'Video conference viewing with gemologist',
+                    'Escrow + bonded courier supported'
+                ],
+                certificates: [
+                    'GIA Report: CEY-99651',
+                    'AGL Prestige Report: AGL-221904'
+                ]
+            },
+            'gem-05': {
+                title: 'Imperial Ruby Cluster',
+                subtitle: '2.3ct · Ratnapura, Sri Lanka',
+                description: 'Cluster-ready parcel of imperial rubies exhibiting velvet depth and precision matching.',
+                price: 'US$ 7,650',
+                certification: 'GIA Certified',
+                views: '1.2k views',
+                availability: 'Available · Set-ready parcel',
+                sellerTier: 'Growth Seller',
+                image: 'images/gems/gem-05.jpg',
+                specs: [
+                    { label: 'Cut', value: 'Princess' },
+                    { label: 'Color', value: 'Deep Red' },
+                    { label: 'Clarity', value: 'VS1' },
+                    { label: 'Treatment', value: 'Heat only' }
+                ],
+                highlights: [
+                    'Handled with nitrogen-purged storage',
+                    'Matching service for additional stones',
+                    'Studio imagery + CAD overlay available'
+                ],
+                certificates: [
+                    'GIA Ruby Cluster Report: RBY-55290'
+                ]
+            },
+            'gem-06': {
+                title: 'Padparadscha Sapphire',
+                subtitle: '2.5ct · Ratnapura, Sri Lanka',
+                description: 'Sunset-hued padparadscha sapphire with balanced pink-orange saturation and zero windowing.',
+                price: 'US$ 8,200',
+                certification: 'GIA & Lotus Certified',
+                views: '890 views',
+                availability: 'Reserved · Accepting offers',
+                sellerTier: 'Premium Seller',
+                image: 'images/gems/gem-06.jpg',
+                specs: [
+                    { label: 'Cut', value: 'Oval' },
+                    { label: 'Color', value: 'Sunset Pink-Orange' },
+                    { label: 'Clarity', value: 'VVS1' },
+                    { label: 'Treatment', value: 'No heat' }
+                ],
+                highlights: [
+                    'Color-calibrated video under D65 and candlelight',
+                    'Complimentary design consultation',
+                    'GemReg verified export documentation'
+                ],
+                certificates: [
+                    'GIA Report: PAD-77410',
+                    'Lotus Memo: LOT-2024-881'
+                ]
+            }
+        };
+
+        const params = new URLSearchParams(window.location.search);
+        const productId = params.get('product') || 'gem-01';
+        const product = PRODUCTS[productId] || PRODUCTS['gem-01'];
+
+        document.getElementById('productTitle').textContent = product.title;
+        document.getElementById('productSubtitle').textContent = product.subtitle;
+        document.getElementById('productDescription').textContent = product.description;
+        document.getElementById('productPrice').textContent = product.price;
+        document.getElementById('productCertification').textContent = product.certification;
+        document.getElementById('productViews').textContent = product.views;
+        document.getElementById('productAvailability').textContent = product.availability;
+        document.getElementById('productSellerTier').textContent = product.sellerTier;
+        document.getElementById('productMedia').style.backgroundImage = `url('${product.image}')`;
+
+        const specsContainer = document.getElementById('productSpecs');
+        specsContainer.innerHTML = product.specs.map(spec => `
+            <div class="detail-item">
+                <span class="detail-label">${spec.label}:</span>
+                <span class="detail-value">${spec.value}</span>
+            </div>
+        `).join('');
+
+        const highlightContainer = document.getElementById('productHighlights');
+        highlightContainer.innerHTML = product.highlights.map(item => `<li>${item}</li>`).join('');
+
+        const certificateContainer = document.getElementById('productCertificates');
+        const boostListingButton = document.getElementById('boostListingButton');
+        
+        // Try to fetch actual gemstone data from API if product ID is numeric (database ID)
+        const productIdParam = params.get('product');
+        const gemstoneId = params.get('id');
+        
+        if (gemstoneId) {
+            // Fetch real gemstone data from API
+            fetch(`/api/gemstones/${gemstoneId}`)
+                .then(response => response.json())
+                .then(gemstone => {
+                    // Enable boost button only for the owning, approved seller
+                    try {
+                        const sellerInfoRaw = sessionStorage.getItem('sellerInfo');
+                        if (sellerInfoRaw) {
+                            const seller = JSON.parse(sellerInfoRaw);
+                            if (seller && seller.id === gemstone.sellerId && seller.verificationStatus === 'APPROVED') {
+                                productBoostGemstoneId = gemstone.id;
+                                if (boostListingButton) {
+                                    boostListingButton.style.display = 'inline-flex';
+                                    boostListingButton.addEventListener('click', () => openBoostModalFromProduct());
+                                }
+                            }
+                        }
+                    } catch (e) {
+                        console.warn('Unable to enable boost button:', e);
+                    }
+
+                    if (gemstone.certificateFilePath) {
+                        // Show certificate with download button
+                        certificateContainer.innerHTML = `
+                            <div class="certificate-item">
+                                <p>${gemstone.certification || 'Certificate'}: ${gemstone.certificateNumber || 'N/A'}</p>
+                                <a href="/api/gemstones/${gemstone.id}/certificate/download" 
+                                   class="btn-card" 
+                                   download
+                                   style="margin-top: 12px; display: inline-block;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 6px;">
+                                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                                    </svg>
+                                    Download Certificate
+                                </a>
+                            </div>
+                        `;
+                    } else if (gemstone.certificateNumber) {
+                        // Show certificate info without download
+                        certificateContainer.innerHTML = `<p>${gemstone.certification || 'Certificate'}: ${gemstone.certificateNumber}</p>`;
+                    } else {
+                        certificateContainer.innerHTML = product.certificates.map(cert => `<p>${cert}</p>`).join('');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching gemstone:', error);
+                    // Fallback to static data
+                    certificateContainer.innerHTML = product.certificates.map(cert => `<p>${cert}</p>`).join('');
+                });
+        } else {
+            // Use static product data
+            certificateContainer.innerHTML = product.certificates.map(cert => `<p>${cert}</p>`).join('');
+        }
+
+        // Boost modal workflow for product view page
+        function openBoostModalFromProduct() {
+            if (!productBoostGemstoneId) return;
+            const modal = document.getElementById('boostModal');
+            const daysInput = document.getElementById('boostDaysInput');
+            const payBtn = document.getElementById('boostPayButton');
+
+            if (daysInput) {
+                daysInput.value = 2;
+            }
+            if (payBtn) {
+                payBtn.disabled = false;
+                payBtn.textContent = 'Pay & Activate';
+            }
+
+            updateBoostCostDisplay();
+            modal.classList.remove('hidden');
+        }
+
+        function closeBoostModal() {
+            const modal = document.getElementById('boostModal');
+            if (modal) {
+                modal.classList.add('hidden');
+            }
+        }
+
+        function updateBoostCostDisplay() {
+            const daysInput = document.getElementById('boostDaysInput');
+            const costDisplay = document.getElementById('boostCostDisplay');
+            const costNote = document.getElementById('boostCostNote');
+            if (!daysInput || !costDisplay || !costNote) return;
+
+            let days = parseInt(daysInput.value, 10);
+            if (isNaN(days) || days < 2) {
+                days = 2;
+                daysInput.value = 2;
+            }
+
+            const blocks = Math.ceil(days / 2);
+            const total = (blocks * 0.99).toFixed(2);
+
+            costDisplay.textContent = `$${total}`;
+            costNote.textContent = `${blocks} × 2-day block${blocks > 1 ? 's' : ''} · ${days} day boost`;
+        }
+
+        async function confirmBoostPurchase() {
+            if (!productBoostGemstoneId) return;
+
+            const daysInput = document.getElementById('boostDaysInput');
+            const payBtn = document.getElementById('boostPayButton');
+            if (!daysInput || !payBtn) return;
+
+            let days = parseInt(daysInput.value, 10);
+            if (isNaN(days) || days < 2) {
+                days = 2;
+            }
+
+            payBtn.disabled = true;
+            payBtn.textContent = 'Processing...';
+
+            try {
+                const response = await fetch(`/api/gemstones/${productBoostGemstoneId}/premium-boost`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ days })
+                });
+
+                if (response.ok) {
+                    alert('Boost activated! Your listing will be highlighted shortly.');
+                    closeBoostModal();
+                    location.reload();
+                } else {
+                    const error = await response.json();
+                    alert(error.error || 'Failed to activate boost. Please try again.');
+                    payBtn.disabled = false;
+                    payBtn.textContent = 'Pay & Activate';
+                }
+            } catch (error) {
+                console.error('Error activating boost:', error);
+                alert('An error occurred. Please try again.');
+                payBtn.disabled = false;
+                payBtn.textContent = 'Pay & Activate';
+            }
+        }
+
+        // Expose modal functions globally so inline HTML can use them
+        window.openBoostModalFromProduct = openBoostModalFromProduct;
+        window.closeBoostModal = closeBoostModal;
+        window.updateBoostCostDisplay = updateBoostCostDisplay;
+        window.confirmBoostPurchase = confirmBoostPurchase;
+    </script>
+    
+    <!-- Boost modal (reused pricing and UX from seller dashboard) -->
+    <div id="boostModal" class="boost-modal hidden">
+        <div class="boost-modal-overlay" onclick="closeBoostModal()"></div>
+        <div class="boost-modal-panel">
+            <button class="boost-modal-close" type="button" onclick="closeBoostModal()" aria-label="Close boost modal">×</button>
+            <p class="boost-info-label">Boost purchase</p>
+            <h3>Feature this listing</h3>
+            <p>Set the number of days you want the banner to run. Each 2-day block costs $0.99 and is billed automatically.</p>
+
+            <div class="boost-modal-input">
+                <label for="boostDaysInput">Boost duration (days)</label>
+                <input id="boostDaysInput" type="number" min="2" step="1" value="2" oninput="updateBoostCostDisplay()">
+            </div>
+
+            <div class="boost-cost-summary">
+                <div>
+                    <span>Estimated cost</span>
+                    <p id="boostCostDisplay" class="boost-cost-value">$0.99</p>
+                </div>
+                <p id="boostCostNote" class="boost-cost-note">1 × 2-day block · 2 day boost</p>
+            </div>
+
+            <div class="boost-modal-actions">
+                <button class="btn-cancel" type="button" onclick="closeBoostModal()">Cancel</button>
+                <button class="btn-primary" type="button" id="boostPayButton" onclick="confirmBoostPurchase()">Pay & Activate</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+

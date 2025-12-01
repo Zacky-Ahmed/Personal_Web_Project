@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="277e4877-91c3-44ca-ae41-939e48ee6a98" name="Changes" comment="updates updated website">
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Personal_Web_Project.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemora/.gitattributes" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemora/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemora/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemora/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemora/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemora/src/main/java/gem/gembro/GemBroApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemora/src/main/java/gem/gembro/config/BrowserLauncher.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemora/src/main/java/gem/gembro/config/SecurityConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemora/src/main/java/gem/gembro/controller/AuthController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemora/src/main/java/gem/gembro/controller/ContactController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemora/src/main/java/gem/gembro/controller/SellerController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemora/src/main/java/gem/gembro/model/ContactMessage.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemora/src/main/java/gem/gembro/model/EmailVerification.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemora/src/main/java/gem/gembro/repository/ContactMessageRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemora/src/main/java/gem/gembro/repository/EmailVerificationRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemora/src/main/java/gem/gembro/repository/GemstoneRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemora/src/main/java/gem/gembro/repository/SellerRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemora/src/main/java/gem/gembro/repository/UserRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemora/src/main/java/gem/gembro/service/ContactMessageService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemora/src/main/java/gem/gembro/service/EmailService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemora/src/main/java/gem/gembro/service/EmailVerificationService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemora/src/main/java/gem/gembro/service/SellerService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemora/src/main/resources/static/gemoora.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemora/src/main/resources/static/images/gems/gem-01.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemora/src/main/resources/static/images/gems/gem-02.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemora/src/main/resources/static/images/gems/gem-03.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemora/src/main/resources/static/images/gems/gem-04.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemora/src/main/resources/static/images/gems/gem-05.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemora/src/main/resources/static/images/gems/gem-06.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemora/src/main/resources/templates/about.html" beforeDir="false" afterPath="$PROJECT_DIR$/Gemora/src/main/resources/templates/about.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemora/src/main/resources/templates/admin-login.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemora/src/main/resources/templates/signup.html" beforeDir="false" afterPath="$PROJECT_DIR$/Gemora/src/main/resources/templates/signup.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemora/src/test/java/gem/gembro/GemoraApplicationTests.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Gemora/gem/gembro/GemBroApplicationTests.class" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="PUSH_AUTO_UPDATE" value="true" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Zacky-Ahmed&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Zacky-Ahmed/Personal_Web_Project.git&quot;,
+    &quot;accountId&quot;: &quot;341c17b7-f6ca-4f00-9a28-300aa2b8986a&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="35agvdTXRAorK9DW2m4lj6zQCl4" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "Spring Boot.GemBroApplication.executor": "Run",
+    "Spring Boot.GemoraApplication.executor": "Run",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/jazeel/OneDrive/Desktop/Personal_Web_Project",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\jazeel\OneDrive\Desktop\Personal_Web_Project\Gemora" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\ASUS\OneDrive\Desktop\Personal_Web_Project" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="GemBroApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <option name="ALTERNATIVE_JRE_PATH" value="24" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <module name="GemBro" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="gem.gembro.GemBroApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.26574.91" />
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.26574.91" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="277e4877-91c3-44ca-ae41-939e48ee6a98" name="Changes" comment="" />
+      <created>1763353827517</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1763353827517</updated>
+      <workItem from="1763353828967" duration="10592000" />
+      <workItem from="1763696556416" duration="691000" />
+      <workItem from="1763697287818" duration="7161000" />
+      <workItem from="1763731137731" duration="277000" />
+      <workItem from="1763805242559" duration="589000" />
+      <workItem from="1763806804327" duration="2000" />
+      <workItem from="1763883327065" duration="1945000" />
+      <workItem from="1764130508796" duration="4487000" />
+      <workItem from="1764572581224" duration="4685000" />
+      <workItem from="1764586352637" duration="3330000" />
+      <workItem from="1764591687942" duration="210000" />
+    </task>
+    <task id="LOCAL-00001" summary="updates">
+      <option name="closed" value="true" />
+      <created>1763354155146</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1763354155146</updated>
+    </task>
+    <task id="LOCAL-00002" summary="updates">
+      <option name="closed" value="true" />
+      <created>1763355700895</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1763355700895</updated>
+    </task>
+    <task id="LOCAL-00003" summary="updates">
+      <option name="closed" value="true" />
+      <created>1763357908406</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1763357908406</updated>
+    </task>
+    <task id="LOCAL-00004" summary="updates">
+      <option name="closed" value="true" />
+      <created>1763360255283</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1763360255283</updated>
+    </task>
+    <task id="LOCAL-00005" summary="updates">
+      <option name="closed" value="true" />
+      <created>1763360776916</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1763360776916</updated>
+    </task>
+    <task id="LOCAL-00006" summary="updates">
+      <option name="closed" value="true" />
+      <created>1763362348614</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1763362348614</updated>
+    </task>
+    <task id="LOCAL-00007" summary="updates">
+      <option name="closed" value="true" />
+      <created>1763364121537</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1763364121537</updated>
+    </task>
+    <task id="LOCAL-00008" summary="updates">
+      <option name="closed" value="true" />
+      <created>1763368472747</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1763368472747</updated>
+    </task>
+    <task id="LOCAL-00009" summary="updates">
+      <option name="closed" value="true" />
+      <created>1763701640668</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1763701640668</updated>
+    </task>
+    <task id="LOCAL-00010" summary="updates">
+      <option name="closed" value="true" />
+      <created>1763731168441</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1763731168441</updated>
+    </task>
+    <task id="LOCAL-00011" summary="updates">
+      <option name="closed" value="true" />
+      <created>1764589748630</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1764589748630</updated>
+    </task>
+    <task id="LOCAL-00012" summary="updates updated website">
+      <option name="closed" value="true" />
+      <created>1764590152680</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1764590152680</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="updates" />
+    <MESSAGE value="updates updated website" />
+    <option name="LAST_COMMIT_MESSAGE" value="updates updated website" />
+  </component>
+</project>

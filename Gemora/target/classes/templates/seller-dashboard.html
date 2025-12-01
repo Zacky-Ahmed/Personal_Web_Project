@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Dashboard | GemBro</title>
+    <meta name="description" content="Manage your gemstone listings and seller account">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        .stat-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow-md);
+        }
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .dashboard-actions {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 32px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <div class="logo-icon">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16 2L6 10L16 30L26 10L16 2Z" fill="url(#sellerDashboardLogoGradient)"/>
+                        <path d="M16 2L10 8L16 14L22 8L16 2Z" fill="url(#sellerDashboardLogoGradient2)"/>
+                        <defs>
+                            <linearGradient id="sellerDashboardLogoGradient" x1="16" y1="2" x2="16" y2="30" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#6366f1"/>
+                                <stop offset="50%" stop-color="#8b5cf6"/>
+                                <stop offset="100%" stop-color="#ec4899"/>
+                            </linearGradient>
+                            <linearGradient id="sellerDashboardLogoGradient2" x1="16" y1="2" x2="16" y2="14" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#ffffff" stop-opacity="0.3"/>
+                                <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <span class="logo-text">GemBro</span>
+            </a>
+            <div class="nav-menu" id="navMenu">
+                <a href="marketplace.html" class="nav-link">Marketplace</a>
+                <a href="index.html#workflow" class="nav-link">How It Works</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+            </div>
+            <div class="nav-actions" id="navActions">
+                <a href="signup.html" class="btn-ghost">Sign Up</a>
+                <a href="login.html" class="btn-ghost">Sign In</a>
+            </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Dashboard Hero -->
+    <section class="seller-hero" style="min-height: 40vh; padding: 100px 0 60px;">
+        <div class="seller-hero-bg">
+            <div class="gradient-orb orb-1"></div>
+            <div class="gradient-orb orb-2"></div>
+        </div>
+        <div class="container">
+            <div class="seller-hero-content">
+                <h1 class="seller-title">Seller Dashboard</h1>
+                <p class="seller-subtitle">Manage your gemstone listings and track your sales</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Content -->
+    <section style="padding: 60px 0;">
+        <div class="container">
+            <div class="dashboard-header">
+                <h2 style="font-size: 28px; font-weight: 700;">My Listings</h2>
+                <a href="upload-product.html" class="btn-gradient">+ Upload New Product</a>
+            </div>
+
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalListings">0</div>
+                    <div class="stat-label">Total Listings</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="activeListings">0</div>
+                    <div class="stat-label">Active Listings</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalViews">0</div>
+                    <div class="stat-label">Total Views</div>
+                </div>
+            </div>
+
+            <div class="boost-info-card">
+                <div>
+                    <p class="boost-info-label">Boosted placement</p>
+                    <h3>Banner promotion · $0.99 per post</h3>
+                    <p>Boost a listing to pin it as a banner-style ad at the top of the marketplace for 2 full days. Perfect for flash drops and urgent inventory.</p>
+                    <ul class="boost-info-points">
+                        <li>Appears ahead of all marketplace listings</li>
+                        <li>Highlighted badge + countdown for buyers</li>
+                        <li>Single flat charge of $0.99 per boost</li>
+                    </ul>
+                </div>
+                <div class="boost-info-meta">
+                    <div>
+                        <p class="boost-meta-value">$0.99</p>
+                        <span>per boost</span>
+                    </div>
+                    <div>
+                        <p class="boost-meta-value">2 days</p>
+                        <span>runtime</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-actions">
+                <a href="upload-product.html" class="btn-gradient">Upload Product</a>
+                <a href="marketplace.html" class="btn-ghost">Browse Marketplace</a>
+            </div>
+
+            <div id="loadingMessage" style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                <p>Loading your listings...</p>
+            </div>
+            <div id="errorMessage" style="display: none; text-align: center; padding: 40px; color: var(--error);">
+                <p>Failed to load listings. Please try again later.</p>
+            </div>
+            <div id="noResultsMessage" style="display: none; text-align: center; padding: 40px; color: var(--text-secondary);">
+                <p>You haven't uploaded any products yet. <a href="upload-product.html" style="color: var(--primary-light);">Upload your first product</a></p>
+            </div>
+            <div id="listingsGrid" class="listings-grid" style="display: none;">
+                <!-- Listings will be dynamically loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <div class="logo-icon">
+                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M16 2L6 10L16 30L26 10L16 2Z" fill="url(#sellerDashboardFooterLogoGradient)"/>
+                                <path d="M16 2L10 8L16 14L22 8L16 2Z" fill="url(#sellerDashboardFooterLogoGradient2)"/>
+                                <defs>
+                                    <linearGradient id="sellerDashboardFooterLogoGradient" x1="16" y1="2" x2="16" y2="30" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0%" stop-color="#6366f1"/>
+                                        <stop offset="50%" stop-color="#8b5cf6"/>
+                                        <stop offset="100%" stop-color="#ec4899"/>
+                                    </linearGradient>
+                                    <linearGradient id="sellerDashboardFooterLogoGradient2" x1="16" y1="2" x2="16" y2="14" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0%" stop-color="#ffffff" stop-opacity="0.3"/>
+                                        <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <span class="logo-text">GemBro</span>
+                    </div>
+                    <p class="footer-description">Connecting gem experts with global buyers through authenticity, transparency, and premium support.</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; <span id="currentYear"></span> GemBro. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if seller is logged in
+            const sellerInfo = sessionStorage.getItem('sellerInfo');
+            const userInfo = sessionStorage.getItem('userInfo');
+
+            if (!sellerInfo || !userInfo) {
+                window.location.href = 'seller-login.html';
+                return;
+            }
+
+            const seller = JSON.parse(sellerInfo);
+            const user = JSON.parse(userInfo);
+
+            // Load seller's gemstones
+            const loadingMessage = document.getElementById('loadingMessage');
+            const errorMessage = document.getElementById('errorMessage');
+            const noResultsMessage = document.getElementById('noResultsMessage');
+            const listingsGrid = document.getElementById('listingsGrid');
+
+            fetch(`/api/gemstones/seller/${seller.id}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to load listings');
+                    }
+                    return response.json();
+                })
+                .then(gemstones => {
+                    loadingMessage.style.display = 'none';
+
+                    if (gemstones.length === 0) {
+                        noResultsMessage.style.display = 'block';
+                        return;
+                    }
+
+                    // Update stats
+                    document.getElementById('totalListings').textContent = gemstones.length;
+                    const activeCount = gemstones.filter(g => g.status === 'ACTIVE').length;
+                    document.getElementById('activeListings').textContent = activeCount;
+                    const totalViews = gemstones.reduce((sum, g) => sum + (g.viewsCount || 0), 0);
+                    document.getElementById('totalViews').textContent = totalViews;
+
+                    // Display listings
+                    listingsGrid.innerHTML = gemstones.map(gem => {
+                        const isBoosted = gem.isPremiumBoosted === true;
+                        const boostExpires = gem.premiumBoostExpiresAt ? new Date(gem.premiumBoostExpiresAt) : null;
+                        const boostExpired = boostExpires && boostExpires < new Date();
+                        let boostStatusText = '';
+                        if (boostExpires && !boostExpired) {
+                            const now = new Date();
+                            const diffMs = boostExpires - now;
+                            const diffHours = Math.max(1, Math.ceil(diffMs / (1000 * 60 * 60)));
+                            if (diffHours >= 24) {
+                                boostStatusText = `${Math.ceil(diffHours / 24)}d left`;
+                            } else {
+                                boostStatusText = `${diffHours}h left`;
+                            }
+                        }
+                        
+                        return `
+                        <div class="listing-card" data-gem-id="${gem.id}">
+                            <div class="listing-image-container">
+                                <div class="listing-image" style="background-image: url('${gem.imageUrl || 'images/gems/gem-01.jpg'}');"></div>
+                                ${isBoosted && !boostExpired ? '<div class="listing-badge premium">Premium Boost</div>' : ''}
+                            </div>
+                            <div class="listing-content">
+                                <div class="seller-type">${gem.status || 'ACTIVE'}</div>
+                                <h3 class="listing-title">${gem.name || 'Unnamed Gem'}</h3>
+                                <p class="listing-specs">${gem.caratWeight || 'N/A'}ct · ${gem.origin || 'N/A'}</p>
+                                <div class="gem-details">
+                                    <div class="detail-item">
+                                        <span class="detail-label">Type:</span>
+                                        <span class="detail-value">${gem.gemType || 'N/A'}</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Cut:</span>
+                                        <span class="detail-value">${gem.cutType || 'N/A'}</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Color:</span>
+                                        <span class="detail-value">${gem.color || 'N/A'}</span>
+                                    </div>
+                                </div>
+                                <div class="listing-meta">
+                                    <div class="listing-info">
+                                        <span>${gem.viewsCount || 0} views</span>
+                                        ${isBoosted && !boostExpired ? `<span class="boost-status">⚡ Boosted · ${boostStatusText}</span>` : ''}
+                                    </div>
+                                    <div class="listing-price">${gem.price ? 'LKR ' + Number(gem.price).toLocaleString('en-LK') : 'Price on request'}</div>
+                                </div>
+                                <div style="display: flex; gap: 8px; margin-top: 12px;">
+                                    <a href="product-view.html?id=${gem.id}" class="btn-card" style="flex: 1;">View Details</a>
+                                    ${isBoosted && !boostExpired 
+                                        ? `<button class="btn-card" onclick="deactivateBoost(${gem.id})" style="background: var(--error); color: white; border: none; flex: 1;">Remove Boost</button>`
+                                        : `<button class="btn-card" onclick="openBoostModal(${gem.id})" style="background: var(--primary-light); color: white; border: none; flex: 1;">Boost Listing</button>`
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    }).join('');
+
+                    listingsGrid.style.display = 'grid';
+                })
+                .catch(error => {
+                    console.error('Error loading listings:', error);
+                    loadingMessage.style.display = 'none';
+                    errorMessage.style.display = 'block';
+                });
+        });
+
+        // Boost modal workflow
+        let pendingBoostId = null;
+
+        function openBoostModal(gemstoneId) {
+            pendingBoostId = gemstoneId;
+            const modal = document.getElementById('boostModal');
+            const daysInput = document.getElementById('boostDaysInput');
+            const payBtn = document.getElementById('boostPayButton');
+
+            if (daysInput) {
+                daysInput.value = 2;
+            }
+            if (payBtn) {
+                payBtn.disabled = false;
+                payBtn.textContent = 'Pay & Activate';
+            }
+
+            updateBoostCostDisplay();
+            modal.classList.remove('hidden');
+        }
+
+        function closeBoostModal() {
+            pendingBoostId = null;
+            const modal = document.getElementById('boostModal');
+            modal.classList.add('hidden');
+        }
+
+        function updateBoostCostDisplay() {
+            const daysInput = document.getElementById('boostDaysInput');
+            const costDisplay = document.getElementById('boostCostDisplay');
+            const costNote = document.getElementById('boostCostNote');
+
+            let days = parseInt(daysInput.value, 10);
+            if (isNaN(days) || days < 2) {
+                days = 2;
+                daysInput.value = 2;
+            }
+
+            const blocks = Math.ceil(days / 2);
+            const total = (blocks * 0.99).toFixed(2);
+
+            costDisplay.textContent = `$${total}`;
+            costNote.textContent = `${blocks} × 2-day block${blocks > 1 ? 's' : ''} · ${days} day boost`;
+        }
+
+        async function confirmBoostPurchase() {
+            if (!pendingBoostId) return;
+
+            const daysInput = document.getElementById('boostDaysInput');
+            const payBtn = document.getElementById('boostPayButton');
+            let days = parseInt(daysInput.value, 10);
+            if (isNaN(days) || days < 2) {
+                days = 2;
+            }
+
+            const blocks = Math.ceil(days / 2);
+            const total = (blocks * 0.99).toFixed(2);
+
+            // Redirect to payment page with query parameters
+            payBtn.disabled = true;
+            window.location.href = `payment.html?gemId=${encodeURIComponent(pendingBoostId)}&days=${encodeURIComponent(days)}&total=${encodeURIComponent(total)}`;
+        }
+
+        async function deactivateBoost(gemstoneId) {
+            if (!confirm('Are you sure you want to remove the boost from this listing?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/gemstones/${gemstoneId}/premium-boost`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    alert('Boost removed successfully!');
+                    location.reload(); // Reload to show updated status
+                } else {
+                    const error = await response.json();
+                    alert(error.error || 'Failed to remove boost. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error deactivating boost:', error);
+                alert('An error occurred. Please try again.');
+            }
+        }
+
+        // Make functions globally available
+        window.openBoostModal = openBoostModal;
+        window.closeBoostModal = closeBoostModal;
+        window.updateBoostCostDisplay = updateBoostCostDisplay;
+        window.confirmBoostPurchase = confirmBoostPurchase;
+        window.deactivateBoost = deactivateBoost;
+    </script>
+
+<div id="boostModal" class="boost-modal hidden">
+    <div class="boost-modal-overlay" onclick="closeBoostModal()"></div>
+    <div class="boost-modal-panel">
+        <button class="boost-modal-close" type="button" onclick="closeBoostModal()" aria-label="Close boost modal">×</button>
+        <p class="boost-info-label">Boost purchase</p>
+        <h3>Feature this listing</h3>
+        <p>Set the number of days you want the banner to run. Each 2-day block costs $0.99 and is billed automatically.</p>
+
+        <div class="boost-modal-input">
+            <label for="boostDaysInput">Boost duration (days)</label>
+            <input id="boostDaysInput" type="number" min="2" step="1" value="2" oninput="updateBoostCostDisplay()">
+        </div>
+
+        <div class="boost-cost-summary">
+            <div>
+                <span>Estimated cost</span>
+                <p id="boostCostDisplay" class="boost-cost-value">$0.99</p>
+            </div>
+            <p id="boostCostNote" class="boost-cost-note">1 × 2-day block · 2 day boost</p>
+        </div>
+
+        <div class="boost-modal-actions">
+            <button class="btn-cancel" type="button" onclick="closeBoostModal()">Cancel</button>
+            <button class="btn-primary" type="button" id="boostPayButton" onclick="confirmBoostPurchase()">Pay & Activate</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
