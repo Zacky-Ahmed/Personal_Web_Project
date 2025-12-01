@@ -1,7 +1,9 @@
 package gem.gembro.config;
 
+import gem.gembro.model.Gemstone;
 import gem.gembro.model.Seller;
 import gem.gembro.model.User;
+import gem.gembro.repository.GemstoneRepository;
 import gem.gembro.repository.SellerRepository;
 import gem.gembro.repository.UserRepository;
 import org.slf4j.Logger;
@@ -21,13 +23,16 @@ public class DemoDataLoader implements CommandLineRunner {
 
     private final UserRepository userRepository;
     private final SellerRepository sellerRepository;
+    private final GemstoneRepository gemstoneRepository;
     private final PasswordEncoder passwordEncoder;
 
     public DemoDataLoader(UserRepository userRepository,
                           SellerRepository sellerRepository,
+                          GemstoneRepository gemstoneRepository,
                           PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.sellerRepository = sellerRepository;
+        this.gemstoneRepository = gemstoneRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -83,7 +88,7 @@ public class DemoDataLoader implements CommandLineRunner {
             logger.info("Reset password for test seller {}", TEST_SELLER_EMAIL);
         }
 
-        sellerRepository.findByUserId(testUser.getId()).orElseGet(() -> {
+        Seller testSeller = sellerRepository.findByUserId(testUser.getId()).orElseGet(() -> {
             Seller seller = new Seller();
             seller.setUserId(testUser.getId());
             seller.setBusinessName("Test Gem Traders");
@@ -95,12 +100,51 @@ public class DemoDataLoader implements CommandLineRunner {
             seller.setPremiumBoostsLeft(5);
             Seller savedSeller = sellerRepository.save(seller);
             logger.info("Created test seller profile for {}", TEST_SELLER_EMAIL);
+            return savedSeller;
+        });
+
+        // Ensure test seller has at least two demo gemstone listings
+        if (gemstoneRepository.findBySellerId(testSeller.getId()).isEmpty()) {
+            Gemstone blueSapphire = new Gemstone();
+            blueSapphire.setSellerId(testSeller.getId());
+            blueSapphire.setName("Royal Blue Ceylon Sapphire");
+            blueSapphire.setGemType("Sapphire");
+            blueSapphire.setCaratWeight(new java.math.BigDecimal("3.25"));
+            blueSapphire.setCutType("Oval");
+            blueSapphire.setColor("Royal Blue");
+            blueSapphire.setClarity("VVS1");
+            blueSapphire.setOrigin("Sri Lanka");
+            blueSapphire.setCertification("GemReg");
+            blueSapphire.setCertificateNumber("GEMREG-TEST-001");
+            blueSapphire.setPrice(new java.math.BigDecimal("2500.00"));
+            blueSapphire.setDescription("Premium Ceylon sapphire with exceptional color saturation and brilliance. Ideal for high-end jewellery.");
+            blueSapphire.setImageUrl("/images/gems/gem-01.jpg");
+            gemstoneRepository.save(blueSapphire);
+
+            Gemstone pinkSapphire = new Gemstone();
+            pinkSapphire.setSellerId(testSeller.getId());
+            pinkSapphire.setName("Pastel Pink Sapphire");
+            pinkSapphire.setGemType("Sapphire");
+            pinkSapphire.setCaratWeight(new java.math.BigDecimal("2.10"));
+            pinkSapphire.setCutType("Cushion");
+            pinkSapphire.setColor("Pastel Pink");
+            pinkSapphire.setClarity("VS1");
+            pinkSapphire.setOrigin("Sri Lanka");
+            pinkSapphire.setCertification("GemReg");
+            pinkSapphire.setCertificateNumber("GEMREG-TEST-002");
+            pinkSapphire.setPrice(new java.math.BigDecimal("1450.00"));
+            pinkSapphire.setDescription("Delicate pastel pink sapphire with excellent fire and symmetry. Perfect for engagement rings.");
+            pinkSapphire.setImageUrl("/images/gems/gem-02.jpg");
+            gemstoneRepository.save(pinkSapphire);
+
+            logger.info("Created demo gemstones for test seller {}", TEST_SELLER_EMAIL);
             logger.info("=== TEST SELLER ACCOUNT CREATED ===");
             logger.info("Email: {}", TEST_SELLER_EMAIL);
             logger.info("Password: {}", TEST_SELLER_PASSWORD);
             logger.info("===================================");
-            return savedSeller;
-        });
+        } else {
+            logger.info("Test seller {} already has gemstone listings. Skipping demo gemstone creation.", TEST_SELLER_EMAIL);
+        }
     }
 }
 

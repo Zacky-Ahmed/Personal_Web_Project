@@ -89,6 +89,15 @@ document.addEventListener('DOMContentLoaded', function() {
         sellerForm.addEventListener('submit', function(e) {
             e.preventDefault();
 
+            // Require a logged-in user before submitting
+            if (!isAuthenticated || !activeUser?.id) {
+                if (generalError) {
+                    generalError.textContent = 'Please sign in to your user account before submitting a seller application.';
+                    generalError.classList.add('show');
+                }
+                return;
+            }
+
             // Clear previous errors
             document.querySelectorAll('.form-error').forEach(error => {
                 error.classList.remove('show');
@@ -466,10 +475,78 @@ document.addEventListener('DOMContentLoaded', function() {
     window.syncNavWithAuth = syncNavWithAuth;
 });
 
-// Button handlers for index.html
+// Button handlers for index.html and product pages
 function handleContactSeller() {
-    if (confirm('Please sign in to contact sellers. Would you like to go to the login page?')) {
-        window.location.href = 'login.html';
+    // Check if user is already logged in (either as regular user or seller)
+    let isLoggedIn = false;
+    try {
+        const userInfoRaw = sessionStorage.getItem('userInfo');
+        const sellerInfoRaw = sessionStorage.getItem('sellerInfo');
+        if (userInfoRaw) {
+            const user = JSON.parse(userInfoRaw);
+            if (user && user.id) {
+                isLoggedIn = true;
+            }
+        }
+        if (!isLoggedIn && sellerInfoRaw) {
+            const seller = JSON.parse(sellerInfoRaw);
+            if (seller && seller.id) {
+                isLoggedIn = true;
+            }
+        }
+    } catch (e) {
+        isLoggedIn = false;
+    }
+
+    // If not logged in, keep current behavior and ask them to log in
+    if (!isLoggedIn) {
+        if (confirm('Please sign in to contact sellers. Would you like to go to the login page?')) {
+            window.location.href = 'login.html';
+        }
+        return;
+    }
+
+    // If logged in and viewing a specific gemstone, show that seller's contact details
+    try {
+        const url = new URL(window.location.href);
+        const gemstoneId = url.searchParams.get('id');
+
+        // Only try to fetch contact details if we have a gemstone id
+        if (gemstoneId) {
+            fetch(`/api/gemstones/${gemstoneId}/contact`)
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(err => {
+                            throw new Error(err.error || 'Unable to load seller contact details.');
+                        }).catch(() => {
+                            throw new Error('Unable to load seller contact details.');
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const name = data.sellerBusinessName || 'Seller';
+                    const phone = data.phoneNumber || 'Not provided';
+                    const email = data.email || 'Not provided';
+
+                    alert(
+                        `${name}\n\n` +
+                        `Phone: ${phone}\n` +
+                        `Email: ${email}\n\n` +
+                        `You can contact the seller directly using this number to discuss purchase details.`
+                    );
+                })
+                .catch(error => {
+                    console.error('Error fetching seller contact:', error);
+                    alert('We could not load the seller contact details. Please try again later.');
+                });
+        } else {
+            // No gemstone id in URL – fallback to contact page
+            window.location.href = 'contact.html';
+        }
+    } catch (e) {
+        console.error('Error handling contact seller:', e);
+        window.location.href = 'contact.html';
     }
 }
 

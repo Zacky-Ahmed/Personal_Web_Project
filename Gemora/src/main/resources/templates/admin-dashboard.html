@@ -484,6 +484,8 @@
     <script src="script.js"></script>
     <script>
         let sellerApplicationsCache = [];
+        let usersCache = [];
+        let sellersCache = [];
 
         const formatCurrencyLKR = (value) => {
             if (value === null || value === undefined || value === '') return 'N/A';
@@ -569,6 +571,7 @@
             fetch('/api/users')
                 .then(response => response.json())
                 .then(users => {
+                    usersCache = users;
                     tbody.innerHTML = users.map(user => `
                         <tr>
                             <td>${user.id}</td>
@@ -577,6 +580,7 @@
                             <td>${user.phoneNumber || 'N/A'}</td>
                             <td>${user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}</td>
                             <td>
+                                <button class="btn-admin" style="margin-right: 8px;" onclick="viewUserDetails(${user.id})">View</button>
                                 <button class="btn-admin btn-admin-danger" onclick="deleteUser(${user.id})">Delete</button>
                             </td>
                         </tr>
@@ -651,6 +655,7 @@
             fetch('/api/sellers')
                 .then(response => response.json())
                 .then(sellers => {
+                    sellersCache = sellers;
                     tbody.innerHTML = sellers.map(seller => `
                         <tr>
                             <td>${seller.id}</td>
@@ -660,6 +665,7 @@
                             <td><span class="status-badge ${seller.verificationStatus === 'APPROVED' ? 'status-active' : seller.verificationStatus === 'REJECTED' ? 'status-sold' : 'status-inactive'}">${seller.verificationStatus || 'PENDING'}</span></td>
                             <td>${seller.createdAt ? new Date(seller.createdAt).toLocaleDateString() : 'N/A'}</td>
                             <td>
+                                <button class="btn-admin" style="margin-right: 8px;" onclick="viewSellerDetails(${seller.id})">View</button>
                                 <button class="btn-admin btn-admin-danger" onclick="deleteSeller(${seller.id})">Delete</button>
                             </td>
                         </tr>
@@ -799,12 +805,97 @@
             modal.classList.remove('hidden');
         }
 
+        function viewUserDetails(id) {
+            const user = usersCache.find(u => u.id === id);
+            if (!user) return;
+
+            const modal = document.getElementById('applicationModal');
+            const header = document.getElementById('applicationModalHeader');
+            const grid = document.getElementById('applicationDetailsGrid');
+
+            header.textContent = `User #${user.id}`;
+
+            const fields = [
+                { label: 'Full Name', value: user.fullName || 'N/A' },
+                { label: 'Email', value: user.email || 'N/A' },
+                { label: 'Phone Number', value: user.phoneNumber || 'N/A' },
+                { label: 'Created At', value: user.createdAt ? new Date(user.createdAt).toLocaleString() : 'N/A' }
+            ];
+
+            grid.innerHTML = fields.map(field => `
+                <div class="details-item">
+                    <label>${field.label}</label>
+                    <span>${field.value}</span>
+                </div>
+            `).join('');
+
+            modal.classList.remove('hidden');
+        }
+
+        function viewSellerDetails(id) {
+            const seller = sellersCache.find(s => s.id === id);
+            if (!seller) return;
+
+            const modal = document.getElementById('applicationModal');
+            const header = document.getElementById('applicationModalHeader');
+            const grid = document.getElementById('applicationDetailsGrid');
+
+            header.textContent = `Seller #${seller.id} · ${seller.verificationStatus || 'PENDING'}`;
+
+            const fields = [
+                { label: 'Business Name', value: seller.businessName || 'N/A' },
+                { label: 'User ID', value: seller.userId || 'N/A' },
+                { label: 'NIC Number', value: seller.nicNumber || 'N/A' },
+                { label: 'GemReg Number', value: seller.gemRegNumber || 'N/A' },
+                { label: 'NIC Document', value: toPublicUrl(seller.nicFilePath), type: 'image' },
+                { label: 'GemReg Certificate', value: toPublicUrl(seller.gemRegFilePath), type: 'image' },
+                { label: 'Address', value: seller.address || 'N/A' },
+                { label: 'Subscription Plan', value: seller.subscriptionPlan || 'FREE' },
+                { label: 'Premium Boosts Left', value: seller.premiumBoostsLeft != null ? seller.premiumBoostsLeft : '0' },
+                { label: 'Verification Status', value: seller.verificationStatus || 'PENDING' },
+                { label: 'Created At', value: seller.createdAt ? new Date(seller.createdAt).toLocaleString() : 'N/A' },
+                { label: 'Updated At', value: seller.updatedAt ? new Date(seller.updatedAt).toLocaleString() : 'N/A' }
+            ];
+
+            grid.innerHTML = fields.map(field => {
+                if (field.type === 'image') {
+                    if (field.value) {
+                        return `
+                            <div class="details-item">
+                                <label>${field.label}</label>
+                                <div class="preview-image">
+                                    <img src="${field.value}" alt="${field.label}">
+                                    <a href="${field.value}" target="_blank" rel="noreferrer">Open full image</a>
+                                </div>
+                            </div>
+                        `;
+                    }
+                    return `
+                        <div class="details-item">
+                            <label>${field.label}</label>
+                            <span>Not uploaded</span>
+                        </div>
+                    `;
+                }
+                return `
+                    <div class="details-item">
+                        <label>${field.label}</label>
+                        <span>${field.value}</span>
+                    </div>
+                `;
+            }).join('');
+
+            modal.classList.remove('hidden');
+        }
+
         function closeApplicationModal() {
             const modal = document.getElementById('applicationModal');
             modal.classList.add('hidden');
         }
 
         window.viewApplicationDetails = viewApplicationDetails;
+        window.viewUserDetails = viewUserDetails;
+        window.viewSellerDetails = viewSellerDetails;
         window.closeApplicationModal = closeApplicationModal;
 
         // Delete functions

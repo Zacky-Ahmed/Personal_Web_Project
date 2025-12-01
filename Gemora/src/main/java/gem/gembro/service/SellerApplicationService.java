@@ -45,6 +45,28 @@ public class SellerApplicationService {
         application.setStatus(ApplicationStatus.PENDING);
         application.setProcessedAt(null);
         application.setProcessedBy(null);
+
+        // Ensure we always have a valid user associated with the application
+        if (application.getUserId() == null || application.getUserId() <= 0) {
+            // Try to find an existing user by email
+            Optional<User> existingUser = userRepository.findByEmail(application.getEmail());
+
+            if (existingUser.isPresent()) {
+                application.setUserId(existingUser.get().getId());
+            } else {
+                // Create a minimal user account so the NOT NULL user_id constraint is satisfied
+                String tempPassword = generateTempPassword();
+                User user = new User();
+                user.setEmail(application.getEmail());
+                user.setFullName(application.getFullName());
+                user.setPhoneNumber(application.getPhoneNumber());
+                user.setPassword(passwordEncoder.encode(tempPassword));
+                user.setPasswordResetRequired(true);
+                User savedUser = userRepository.save(user);
+                application.setUserId(savedUser.getId());
+            }
+        }
+
         return applicationRepository.save(application);
     }
 
@@ -79,6 +101,15 @@ public class SellerApplicationService {
         seller.setNicFilePath(application.getNicFrontFileName());
         seller.setGemRegFilePath(application.getGemRegFileName());
         seller.setVerificationStatus(Seller.VerificationStatus.APPROVED);
+
+        // Ensure valid subscription plan and boosts to satisfy DB CHECK constraint
+        if (seller.getSubscriptionPlan() == null) {
+            seller.setSubscriptionPlan(Seller.SubscriptionPlan.FREE);
+        }
+        if (seller.getPremiumBoostsLeft() == null) {
+            seller.setPremiumBoostsLeft(0);
+        }
+
         sellerRepository.save(seller);
     }
 

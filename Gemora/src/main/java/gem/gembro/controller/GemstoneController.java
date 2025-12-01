@@ -1,7 +1,11 @@
 package gem.gembro.controller;
 
 import gem.gembro.model.Gemstone;
+import gem.gembro.model.Seller;
+import gem.gembro.model.User;
 import gem.gembro.service.GemstoneService;
+import gem.gembro.service.SellerService;
+import gem.gembro.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -26,6 +30,12 @@ public class GemstoneController {
     @Autowired
     private GemstoneService gemstoneService;
 
+    @Autowired
+    private SellerService sellerService;
+
+    @Autowired
+    private UserService userService;
+
     @PostMapping
     public ResponseEntity<Gemstone> createGemstone(@RequestBody Gemstone gemstone) {
         return ResponseEntity.status(HttpStatus.CREATED).body(gemstoneService.createGemstone(gemstone));
@@ -36,6 +46,33 @@ public class GemstoneController {
         return gemstoneService.getGemstoneById(id)
                 .map(gemstone -> ResponseEntity.ok(gemstone))
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/{id}/contact")
+    public ResponseEntity<?> getGemstoneSellerContact(@PathVariable Long id) {
+        try {
+            Gemstone gemstone = gemstoneService.getGemstoneById(id)
+                    .orElseThrow(() -> new RuntimeException("Gemstone not found"));
+
+            Seller seller = sellerService.getSellerById(gemstone.getSellerId())
+                    .orElseThrow(() -> new RuntimeException("Seller not found for this gemstone"));
+
+            User user = userService.getUserById(seller.getUserId())
+                    .orElseThrow(() -> new RuntimeException("User not found for this seller"));
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("sellerBusinessName", seller.getBusinessName());
+            response.put("sellerAddress", seller.getAddress());
+            response.put("sellerId", seller.getId());
+            response.put("phoneNumber", user.getPhoneNumber());
+            response.put("email", user.getEmail());
+
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        }
     }
 
     @GetMapping
