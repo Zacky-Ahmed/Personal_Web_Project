@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Product | GemBro</title>
+    <meta name="description" content="Upload a new gemstone listing to the GemBro marketplace">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <div class="logo-icon">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16 2L6 10L16 30L26 10L16 2Z" fill="url(#uploadLogoGradient)"/>
+                        <path d="M16 2L10 8L16 14L22 8L16 2Z" fill="url(#uploadLogoGradient2)"/>
+                        <defs>
+                            <linearGradient id="uploadLogoGradient" x1="16" y1="2" x2="16" y2="30" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#6366f1"/>
+                                <stop offset="50%" stop-color="#8b5cf6"/>
+                                <stop offset="100%" stop-color="#ec4899"/>
+                            </linearGradient>
+                            <linearGradient id="uploadLogoGradient2" x1="16" y1="2" x2="16" y2="14" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#ffffff" stop-opacity="0.3"/>
+                                <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <span class="logo-text">GemBro</span>
+            </a>
+            <div class="nav-menu" id="navMenu">
+                <a href="marketplace.html" class="nav-link">Marketplace</a>
+                <a href="index.html#workflow" class="nav-link">How It Works</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+            </div>
+            <div class="nav-actions" id="navActions">
+                <a href="signup.html" class="btn-ghost">Sign Up</a>
+                <a href="login.html" class="btn-ghost">Sign In</a>
+            </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Upload Section -->
+    <section class="seller-form-section" style="padding: 120px 0;">
+        <div class="container">
+            <div class="form-header" style="text-align: center; margin-bottom: 48px;">
+                <h2 style="font-size: 40px; font-weight: 700; margin-bottom: 12px;">Upload New Product</h2>
+                <p style="color: var(--text-secondary);">Add a new gemstone listing to the marketplace</p>
+            </div>
+            
+            <form id="productUploadForm" class="seller-form" style="max-width: 900px; margin: 0 auto;">
+                <!-- Basic Information -->
+                <div class="form-section-divider">
+                    <h3 style="font-size: 24px; font-weight: 600; margin-bottom: 24px;">Basic Information</h3>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="productName" class="form-label">Product Name *</label>
+                        <input type="text" id="productName" name="productName" class="form-input" placeholder="e.g. Untreated Cornflower Sapphire" required>
+                        <span class="form-error" id="productNameError"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="gemType" class="form-label">Gem Type *</label>
+                        <select id="gemType" name="gemType" class="form-input" required>
+                            <option value="">Select Type</option>
+                            <option value="Sapphire">Sapphire</option>
+                            <option value="Ruby">Ruby</option>
+                            <option value="Emerald">Emerald</option>
+                            <option value="Alexandrite">Alexandrite</option>
+                            <option value="Diamond">Diamond</option>
+                            <option value="Topaz">Topaz</option>
+                            <option value="Garnet">Garnet</option>
+                            <option value="Tourmaline">Tourmaline</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <span class="form-error" id="gemTypeError"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="productDescription" class="form-label">Description *</label>
+                    <textarea id="productDescription" name="productDescription" class="form-textarea" rows="4" placeholder="Describe the gemstone, its characteristics, and any special features..." required></textarea>
+                    <span class="form-error" id="productDescriptionError"></span>
+                </div>
+
+                <!-- Specifications -->
+                <div class="form-section-divider" style="margin-top: 40px;">
+                    <h3 style="font-size: 24px; font-weight: 600; margin-bottom: 24px;">Specifications</h3>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="caratWeight" class="form-label">Carat Weight *</label>
+                        <input type="number" id="caratWeight" name="caratWeight" class="form-input" placeholder="e.g. 3.2" step="0.01" min="0" required>
+                        <span class="form-error" id="caratWeightError"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="cutType" class="form-label">Cut Type *</label>
+                        <select id="cutType" name="cutType" class="form-input" required>
+                            <option value="">Select Cut</option>
+                            <option value="Round Brilliant">Round Brilliant</option>
+                            <option value="Oval Brilliant">Oval Brilliant</option>
+                            <option value="Cushion">Cushion</option>
+                            <option value="Princess">Princess</option>
+                            <option value="Emerald Cut">Emerald Cut</option>
+                            <option value="Pear">Pear</option>
+                            <option value="Marquise">Marquise</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <span class="form-error" id="cutTypeError"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="color" class="form-label">Color *</label>
+                        <input type="text" id="color" name="color" class="form-input" placeholder="e.g. Cornflower Blue" required>
+                        <span class="form-error" id="colorError"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="clarity" class="form-label">Clarity *</label>
+                        <select id="clarity" name="clarity" class="form-input" required>
+                            <option value="">Select Clarity</option>
+                            <option value="FL">FL (Flawless)</option>
+                            <option value="IF">IF (Internally Flawless)</option>
+                            <option value="VVS1">VVS1</option>
+                            <option value="VVS2">VVS2</option>
+                            <option value="VS1">VS1</option>
+                            <option value="VS2">VS2</option>
+                            <option value="SI1">SI1</option>
+                            <option value="SI2">SI2</option>
+                            <option value="I1">I1</option>
+                            <option value="I2">I2</option>
+                            <option value="I3">I3</option>
+                        </select>
+                        <span class="form-error" id="clarityError"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="origin" class="form-label">Origin *</label>
+                        <select id="origin" name="origin" class="form-input" required>
+                            <option value="">Select Origin</option>
+                            <option value="Sri Lanka">Sri Lanka</option>
+                            <option value="Myanmar">Myanmar</option>
+                            <option value="Colombia">Colombia</option>
+                            <option value="Tanzania">Tanzania</option>
+                            <option value="Madagascar">Madagascar</option>
+                            <option value="Thailand">Thailand</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <span class="form-error" id="originError"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="price" class="form-label">Price (USD) *</label>
+                        <input type="number" id="price" name="price" class="form-input" placeholder="e.g. 9850" step="0.01" min="0" required>
+                        <span class="form-error" id="priceError"></span>
+                    </div>
+                </div>
+
+                <!-- Certification -->
+                <div class="form-section-divider" style="margin-top: 40px;">
+                    <h3 style="font-size: 24px; font-weight: 600; margin-bottom: 24px;">Certification</h3>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="certification" class="form-label">Certification Lab</label>
+                        <select id="certification" name="certification" class="form-input">
+                            <option value="">Select Lab</option>
+                            <option value="GIA">GIA</option>
+                            <option value="GRS">GRS</option>
+                            <option value="AGL">AGL</option>
+                            <option value="GemReg">GemReg</option>
+                            <option value="Lotus">Lotus</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="certificateNumber" class="form-label">Certificate Number</label>
+                        <input type="text" id="certificateNumber" name="certificateNumber" class="form-input" placeholder="e.g. CEY-93281">
+                    </div>
+                </div>
+
+                <!-- Files -->
+                <div class="form-section-divider" style="margin-top: 40px;">
+                    <h3 style="font-size: 24px; font-weight: 600; margin-bottom: 24px;">Images & Documents</h3>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="productImage" class="form-label">Product Image *</label>
+                        <div class="file-upload">
+                            <input type="file" id="productImage" name="productImage" accept="image/*" class="file-input" required>
+                            <label for="productImage" class="file-label">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                                </svg>
+                                <span>Choose Image</span>
+                            </label>
+                            <p class="file-name" id="productImageName">No file chosen</p>
+                            <span class="form-error" id="productImageError"></span>
+                        </div>
+                        <div id="imagePreview" style="margin-top: 12px; display: none;">
+                            <img id="previewImg" src="" alt="Preview" style="max-width: 200px; max-height: 200px; border-radius: 8px; border: 1px solid var(--border-color);">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="certificateFile" class="form-label">Lab Certificate (PDF/Image)</label>
+                        <div class="file-upload">
+                            <input type="file" id="certificateFile" name="certificateFile" accept="image/*,.pdf" class="file-input">
+                            <label for="certificateFile" class="file-label">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                                </svg>
+                                <span>Choose Certificate</span>
+                            </label>
+                            <p class="file-name" id="certificateFileName">No file chosen</p>
+                            <span class="form-error" id="certificateFileError"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-info" style="margin-top: 32px;">
+                    <div class="info-box">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 13l4 4L19 7"/>
+                        </svg>
+                        <p>Your listing will be reviewed and published within 24 hours. Make sure all information is accurate.</p>
+                    </div>
+                </div>
+
+                <div class="form-actions" style="margin-top: 40px;">
+                    <button type="submit" class="btn-primary-large" id="submitBtn" style="width: 100%;">
+                        <span id="submitText">Upload Product</span>
+                    </button>
+                    <p class="form-success" id="successMessage"></p>
+                    <p class="form-error" id="errorMessage"></p>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <div class="logo-icon">
+                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M16 2L6 10L16 30L26 10L16 2Z" fill="url(#uploadFooterLogoGradient)"/>
+                                <path d="M16 2L10 8L16 14L22 8L16 2Z" fill="url(#uploadFooterLogoGradient2)"/>
+                                <defs>
+                                    <linearGradient id="uploadFooterLogoGradient" x1="16" y1="2" x2="16" y2="30" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0%" stop-color="#6366f1"/>
+                                        <stop offset="50%" stop-color="#8b5cf6"/>
+                                        <stop offset="100%" stop-color="#ec4899"/>
+                                    </linearGradient>
+                                    <linearGradient id="uploadFooterLogoGradient2" x1="16" y1="2" x2="16" y2="14" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0%" stop-color="#ffffff" stop-opacity="0.3"/>
+                                        <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <span class="logo-text">GemBro</span>
+                    </div>
+                    <p class="footer-description">Connecting gem experts with global buyers through authenticity, transparency, and premium support.</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; <span id="currentYear"></span> GemBro. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('productUploadForm');
+            const productImageInput = document.getElementById('productImage');
+            const imagePreview = document.getElementById('imagePreview');
+            const previewImg = document.getElementById('previewImg');
+
+            // Image preview
+            productImageInput.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        previewImg.src = e.target.result;
+                        imagePreview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                    document.getElementById('productImageName').textContent = file.name;
+                } else {
+                    imagePreview.style.display = 'none';
+                    document.getElementById('productImageName').textContent = 'No file chosen';
+                }
+            });
+
+            // File name display
+            document.getElementById('certificateFile').addEventListener('change', function() {
+                const file = this.files[0];
+                document.getElementById('certificateFileName').textContent = file ? file.name : 'No file chosen';
+            });
+
+            // Form submission
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                // Check if user is logged in
+                const userInfo = sessionStorage.getItem('userInfo');
+                if (!userInfo) {
+                    document.getElementById('errorMessage').textContent = 'Please sign in to upload products.';
+                    document.getElementById('errorMessage').classList.add('show');
+                    return;
+                }
+
+                const user = JSON.parse(userInfo);
+                
+                // Check if user has seller account
+                let sellerId = null;
+                try {
+                    const sellerResponse = await fetch(`/api/sellers/user/${user.id}`);
+                    if (sellerResponse.ok) {
+                        const seller = await sellerResponse.json();
+                        if (seller.verificationStatus === 'APPROVED') {
+                            sellerId = seller.id;
+                        } else {
+                            document.getElementById('errorMessage').textContent = 'Your seller account is not approved yet. Please wait for admin approval.';
+                            document.getElementById('errorMessage').classList.add('show');
+                            return;
+                        }
+                    } else {
+                        document.getElementById('errorMessage').textContent = 'You need to be an approved seller to upload products.';
+                        document.getElementById('errorMessage').classList.add('show');
+                        return;
+                    }
+                } catch (error) {
+                    document.getElementById('errorMessage').textContent = 'Error verifying seller status. Please try again.';
+                    document.getElementById('errorMessage').classList.add('show');
+                    return;
+                }
+
+                // Clear previous errors
+                document.querySelectorAll('.form-error').forEach(error => {
+                    error.classList.remove('show');
+                    error.textContent = '';
+                });
+                document.getElementById('errorMessage').classList.remove('show');
+                document.getElementById('successMessage').classList.remove('show');
+
+                const submitBtn = document.getElementById('submitBtn');
+                const submitText = document.getElementById('submitText');
+                submitBtn.disabled = true;
+                submitText.textContent = 'Uploading...';
+
+                // Prepare gemstone data
+                const gemstoneData = {
+                    sellerId: sellerId,
+                    name: document.getElementById('productName').value.trim(),
+                    gemType: document.getElementById('gemType').value,
+                    caratWeight: parseFloat(document.getElementById('caratWeight').value),
+                    cutType: document.getElementById('cutType').value,
+                    color: document.getElementById('color').value.trim(),
+                    clarity: document.getElementById('clarity').value,
+                    origin: document.getElementById('origin').value,
+                    price: parseFloat(document.getElementById('price').value),
+                    description: document.getElementById('productDescription').value.trim(),
+                    certification: document.getElementById('certification').value || null,
+                    certificateNumber: document.getElementById('certificateNumber').value.trim() || null,
+                    status: 'ACTIVE'
+                };
+
+                // For now, we'll submit without file uploads (files need backend file upload endpoint)
+                // TODO: Implement file upload endpoint and handle image/certificate uploads
+                try {
+                    const response = await fetch('/api/gemstones', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(gemstoneData)
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        document.getElementById('successMessage').textContent = 'Product uploaded successfully! Redirecting to marketplace...';
+                        document.getElementById('successMessage').classList.add('show');
+                        form.reset();
+                        imagePreview.style.display = 'none';
+                        document.getElementById('productImageName').textContent = 'No file chosen';
+                        document.getElementById('certificateFileName').textContent = 'No file chosen';
+                        
+                        setTimeout(() => {
+                            window.location.href = 'marketplace.html';
+                        }, 2000);
+                    } else {
+                        throw new Error(data.error || 'Failed to upload product');
+                    }
+                } catch (error) {
+                    document.getElementById('errorMessage').textContent = error.message || 'An error occurred while uploading the product. Please try again.';
+                    document.getElementById('errorMessage').classList.add('show');
+                } finally {
+                    submitBtn.disabled = false;
+                    submitText.textContent = 'Upload Product';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
